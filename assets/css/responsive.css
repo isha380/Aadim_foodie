@@ -1,0 +1,25 @@
+@media screen and (max-width:600px){
+    .navBar-banner {
+        width: 151%;
+        gap: 10px;
+    }
+    .home-page-sub-info {
+        font-size: 20px;
+    }
+    .title {
+        font-size: 30px;
+    
+    }
+    .navBar-banner-logo img {
+        height: 65px;
+        width: 65px;
+        margin-left: 15px;
+        margin-right: -100px;
+    }
+    .navBar-banner-headings ul {
+        gap: 40px;
+    }
+    li {
+        font-size: 15px;
+    }
+}

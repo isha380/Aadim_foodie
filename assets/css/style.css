@@ -1,0 +1,24 @@
+@font-face{
+    font-family: Bree;
+    src: url(./Fonts/Bree_Serif/BreeSerif-Regular.ttf);
+}
+*{
+    color:#543787;
+    margin: 0;
+    padding: 0;
+   
+}
+
+.title{
+       font-size: 50px;
+       font-weight: bold;
+}
+body.main-body{
+    background-image: url(../image/web_page/login-bg.png);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+
+
+ 
