@@ -26,7 +26,7 @@
                     <input type="text" id="reg-std-name-value" required>
                 </div>
                 <div class="std-teach roll">
-                    <label for="roll-num">Id:</label>
+                    <label for="roll-num">Roll-num:</label>
                     <input type="text" id="reg-std-id-value" required>
                 </div>
                 <div class="std-teach email">

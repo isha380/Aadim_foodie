@@ -137,14 +137,19 @@ button.btn.dish{
   width: 14px;
 }
 .add-to-cart-button .btn.cart-btn{
-  background-color: #543787;
+    background-color: #543787;
     height: 40px;
     width: 177px;
     border-radius: 25px;
     font-weight: bold;
+    color: #FEB737;
+    font-size: 20px;
 }
-.btn.cart-btn a{
-  text-decoration: none;
+
+.btn.cart-btn .cart-btn-text{
+color: #FEB737;
+FONT-SIZE: 20px;
+margin-right: 12px;
 }
 .add-cart{
   color: #feb737;
@@ -323,7 +328,7 @@ ul#info li{
 }
 
 .std-teach.roll input{
-  margin-left: 69px;
+  margin-left: 55px;
 } 
 .std-teach.pw input{
   margin-left: 59px;
@@ -336,9 +341,6 @@ ul#info li{
 }
 .std-teach.faculty select{
   margin-left: 70px;
-}
-.std-teach.roll input{
-  margin-left: 104px;
 }
 .std-teach.name input  {
   margin-left: 78px !important;
@@ -372,6 +374,44 @@ ul#info li{
 .menu-headline-title span{
   font-size: 25px;
   font-weight: bold;
+}
+.menu-image img{
+  width: 500px;
+  height: 500px;
+  margin-left: 80px;
+}
+.menu-banner{
+  display: flex;
+  gap: 60px;
+  margin-top: 50px;
+}
+.menu-info-txt{
+  font-weight: bold;
+    font-size: 40px;
+}
+.menu-container-headline{
+  background: #FFEBAE;
+  height: 50px;
+  width: 200px;
+  margin: 30px 0px 10px 530px;
+}
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
+
+#dish-quantity-1{
+  font-size: 25px;
+  background: #FFEBAE;
+  width: 35px;
+  justify-content: center;
+  display: flex;
 }
 .dish-slide-container.menu{
   display: flex;
