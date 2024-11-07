@@ -15,14 +15,14 @@
     <section id="homePage">
         <div class="navBar-banner">
             <div class="navBar-banner-logo">
-                <img src="../assets/image/icon/final_foodie.png">
+                <img src="../assets/image/icon/final_foodie logo.png">
             </div>
             <div class="navBar-banner-headings">
                 <ul>
-                    <li><a href="#">Home</a></li>
+                    <li><a href="login.php">Home</a></li>
                     <li><a href="#">About us</a></li>
                     <li><a href="#">Contact</a></li>
-                    <li><a class="active" href="menu.php">view menu</a></li>
+                    <li><a class="active" href="login.php">view menu</a></li>
                     <li><a href="#">login/signUp</a></li>
 
                 </ul>
@@ -146,7 +146,7 @@
 
     </section>
     <!-- --------------------------------------------------------footer ------------------------------------------------------------------------ -->
-    <section id="footer-banner-wrapper">
+    <div id="footer-banner-wrapper">
 
         <div class="footer-banner">
             <div class="section about-us">
@@ -237,7 +237,7 @@
             <p>Copyright@2024.All right reserved</p>
         </div>
 
-    </section>
+</div>
     <script src="slide.js"></script>
 </body>
 

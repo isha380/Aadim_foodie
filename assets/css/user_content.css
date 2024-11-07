@@ -1,0 +1,81 @@
+table,th,td{
+   
+    border: 2px solid #393939;
+    border-collapse: collapse;
+    width: 100%;
+    padding: 24px;
+
+}
+table{
+
+}
+.studet-table-info{
+
+}
+th{
+    background-color:#ececec ;
+}
+tr{
+    background-color:   #b1c9e9; 
+}
+
+button.student-info-btn{
+    height: 60px;
+    width: 292px;
+    border-radius: 15px;
+    border-color: #543787;
+    
+    font-weight: bold;
+    
+    background-color: #7CB8C0;
+    font-size: 17px;
+   
+    margin: 5px 0px 30px 250px
+}
+.table.student {
+    max-height: 300px;
+    overflow-y: auto;  /* Enables vertical scrollbar */
+    margin-left: 40px;
+    margin-top: 15px;
+}
+.table.student::-webkit-scrollbar {
+    width: 10px;
+}
+
+.table.student::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+.table.student::-webkit-scrollbar-thumb:hover {
+    background-color:  #FEB737;
+}
+ /* Track */
+.table.student::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+
+  td .action.button{
+   display: flex;
+   gap: 15px;
+  }
+  td .action.button:hover{
+background: transparent;
+  }
+  .action .update:hover,
+  .action .delete:hover {
+      background-color: #FFEBAE; /* Apply background color on hover */
+      border-radius: 4px; /* Optional, for rounded edges */
+  }
+  
+  .action .update:hover svg,
+  .action .delete:hover svg {
+      fill: #000; /* Optional, change SVG icon color */
+  }
+/* --------------------------------------------------------------------------- */
+
+ 
+   
+ 
+  

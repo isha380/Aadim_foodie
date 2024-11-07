@@ -1,0 +1,48 @@
+.admin-body.login{
+    background-image: url(../image/web_page/food.png);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+.login-wrapper {
+    background-color: #7cbbc0;
+    height: 270px;
+    width: 470px;
+    margin-left: 413px;
+    margin-top: 260px;
+    border-radius: 40px;
+    border: 2px solid #5C5787;
+}
+.login-text {
+    background: #FFEBAE;
+    height: 40px;
+    color: #5C5787;
+    border-top-left-radius: 70px;
+    border-top-right-radius: 70px;
+}
+.login-text h2 {
+    margin: 0px 0px 44px 205px;
+}
+.login-img img{
+    height: 200px;
+}
+.login-info-wrapper{
+    display: flex;
+}
+.btn.login.admin {
+    background-color: #FFEBAE;
+    height: 30px;
+    width: 85px;
+    border-radius: 25px;
+    font-weight: bold;
+    color: #543787;
+    margin-top: 25px;
+    margin-left: 35px;
+}
+.login-info.admin{
+    margin: 69px 0px 0px 37px;
+
+}
+.admin-name{
+    margin-bottom: 17px;
+}

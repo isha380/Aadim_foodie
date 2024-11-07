@@ -9,6 +9,9 @@
    
 }
 
+html {
+    scroll-behavior: smooth;
+  }
 .title{
        font-size: 50px;
        font-weight: bold;
@@ -20,5 +23,12 @@ body.main-body{
     background-size: cover;
   }
 
-
- 
+body.dashboard{
+ background-color: #FFEBAE;
+ height: 100%;
+}
+ .button:hover{
+     background-color: #543787;
+     color:  #FEB737 !important;
+     border-color:#FFEBAE ;
+ }

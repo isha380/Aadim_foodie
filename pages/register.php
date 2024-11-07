@@ -1,52 +1,53 @@
 <?php
 
 session_start();
-
-
 include "database/connection.php";
 
+$message = "";
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve and sanitize form inputs
-    $name = mysqli_real_escape_string($conn, $_POST['reg-std-name-value']);
-    $roll_num = mysqli_real_escape_string($conn, $_POST['reg-std-id-value']);
-    $faculty = mysqli_real_escape_string($conn, $_POST['reg-std-faculty-value']);
-    $email = mysqli_real_escape_string($conn, $_POST['reg-std-email-value']);
-    $phone = mysqli_real_escape_string($conn, $_POST['reg-std-phone-value']);
-    $password = mysqli_real_escape_string($conn, $_POST['reg-std-pw-value']);
-    $confirm_password = mysqli_real_escape_string($conn, $_POST['reg-std-r-pw-value']);
+    // Check if all required fields are set
+    if (isset($_POST['reg-std-name-value'], $_POST['reg-std-id-value'], $_POST['reg-std-faculty-value'], $_POST['reg-std-email-value'], $_POST['reg-std-phone-value'], $_POST['reg-std-pw-value'], $_POST['reg-std-r-pw-value'])) {
 
-    // Check if passwords match
-    if ($password !== $confirm_password) {
-        echo "Passwords do not match!";
-        exit();
-    }
+        // Retrieve and sanitize form inputs
+        $name = mysqli_real_escape_string($conn, $_POST['reg-std-name-value']);
+        $roll_num = mysqli_real_escape_string($conn, $_POST['reg-std-id-value']);
+        $faculty = mysqli_real_escape_string($conn, $_POST['reg-std-faculty-value']);
+        $email = mysqli_real_escape_string($conn, $_POST['reg-std-email-value']);
+        $phone = mysqli_real_escape_string($conn, $_POST['reg-std-phone-value']);
+        $password = mysqli_real_escape_string($conn, $_POST['reg-std-pw-value']);
+        $confirm_password = mysqli_real_escape_string($conn, $_POST['reg-std-r-pw-value']);
 
-    // Hash the password for security
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        // Check if passwords match
+        if ($password !== $confirm_password) {
+            $message = "Passwords do not match!";
+        } else {
+            // Hash the password for security
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert the data into the student_info table
-    $sql = "INSERT INTO student_info (Name, Rollnum, Faculty, Email, Phone, Password)
-            VALUES (?, ?, ?, ?, ?, ?)";
+            // Insert the data into the student_info table
+            $sql = "INSERT INTO student_info (Name, Rollnum, Faculty, Email, Phone, Password)
+                    VALUES (?, ?, ?, ?, ?, ?)";
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssss", $name, $roll_num, $faculty, $email, $phone, $hashed_password);
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssss", $name, $roll_num, $faculty, $email, $phone, $hashed_password);
 
-    if ($stmt->execute()) {
-        echo "Registration successful!";
-        header("Location: login.php"); // Redirect to login page
-        exit();
+            if ($stmt->execute()) {
+                $message = "Registration successful!";
+                header("Location: login.php"); // Redirect to login page
+                exit();
+            } else {
+                $message = "Error: " . $stmt->error;
+            }
+
+            $stmt->close();
+            $conn->close();
+        }
     } else {
-        echo "Error: " . $stmt->error;
+        $message = "Invalid request.";
     }
-
-    $stmt->close();
-    $conn->close();
-} else {
-    echo "Invalid request.";
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -54,22 +55,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>register</title>
+    <title>Register</title>
     <link rel="stylesheet" href="../assets/css/component.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/style.css">
-
 </head>
 
 <body class="main-body register">
     <div class="reg-wrapper">
         <div class="reg-headline">
-            <h2>Registere here</h2>
+            <h2>Register here</h2>
         </div>
         <div class="reg-img ">
             <img src="../assets/image/icon/reg.png">
         </div>
         <div class="reg-info-container">
+            <?php if ($message): ?>
+                <p><?php echo $message; ?></p>
+            <?php endif; ?>
             <form action="register.php" method="POST">
                 <div class="std-teach name">
                     <label for="name">Name:</label>
@@ -90,8 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <option value="BBS">BBS</option>
                         <option value="MBA">MBA</option>
                     </select>
-
-
                 </div>
                 <div class="std-teach email">
                     <label for="email">Email:</label>
@@ -115,7 +116,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </div>
     </div>
-
 </body>
 
 </html>
