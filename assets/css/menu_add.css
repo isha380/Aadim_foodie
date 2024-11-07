@@ -1,0 +1,24 @@
+.reg-wrapper.dash.menu{
+    height: 455px;
+}
+.std-teach.status{
+    display: flex;
+}
+.std-teach.image input{
+    margin-left: 25px;
+}
+.std-teach.name input{
+
+        margin-left: 27px;
+}
+.std-teach.price input{
+
+    margin-left: 34px;
+}
+/* .menu_add.status{
+    margin-left: 24px;
+} */
+.menu_add.status input{
+    width: 20px;
+    margin-left: 24px;
+}

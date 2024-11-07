@@ -8,51 +8,49 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-// Retrieve admin name
 $adminName = $_SESSION['admin'];
-$message = "";
 
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if all required fields are set
-    if (isset($_POST['reg-std-name-value'], $_POST['reg-std-id-value'], $_POST['reg-std-faculty-value'], $_POST['reg-std-email-value'], $_POST['reg-std-phone-value'], $_POST['reg-std-pw-value'], $_POST['reg-std-r-pw-value'])) {
-
+    if (isset($_POST['food_name'], $_POST['price'], $_POST['status']) && isset($_FILES['image'])) {
         // Retrieve and sanitize form inputs
-        $name = mysqli_real_escape_string($conn, $_POST['reg-std-name-value']);
-        $roll_num = mysqli_real_escape_string($conn, $_POST['reg-std-id-value']);
-        $faculty = mysqli_real_escape_string($conn, $_POST['reg-std-faculty-value']);
-        $email = mysqli_real_escape_string($conn, $_POST['reg-std-email-value']);
-        $phone = mysqli_real_escape_string($conn, $_POST['reg-std-phone-value']);
-        $password = mysqli_real_escape_string($conn, $_POST['reg-std-pw-value']);
-        $confirm_password = mysqli_real_escape_string($conn, $_POST['reg-std-r-pw-value']);
+        $name = mysqli_real_escape_string($conn, $_POST['food_name']);
+        $price = mysqli_real_escape_string($conn, $_POST['price']);
+        $status = mysqli_real_escape_string($conn, $_POST['status']);
 
-        // Check if passwords match
-        if ($password !== $confirm_password) {
-            $message = "Passwords do not match!";
-        } else {
-            // Hash the password for security
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $file_name = $_FILES['image']['name'];
+        $temp_name = $_FILES['image']['tmp_name'];
+        $folder = '../../assets/image/menu/' . $file_name;
 
-            // Insert data into the student_info table
-            $sql = "INSERT INTO student_info (Name, Rollnum, Faculty, Email, Phone, Password) VALUES (?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssss", $name, $roll_num, $faculty, $email, $phone, $hashed_password);
-
-            if ($stmt->execute()) {
-                $message = "User added successfully!";
+        // Move the uploaded file to the target folder
+        if (move_uploaded_file($temp_name, $folder)) {
+            
+            $query = "INSERT INTO menu_items (Image, Name, Status, Price) VALUES ('$file_name', '$name', '$status', '$price')";
+            if (mysqli_query($conn, $query)) {
+                
+                $_SESSION['message'] = "Food item added successfully!";
             } else {
-                $message = "Error: " . $stmt->error;
+               
+                $_SESSION['message'] = "Error: " . mysqli_error($conn);
             }
-
-            $stmt->close();
-            $conn->close();
+        } else {
+            $_SESSION['message'] = "Failed to upload the image.";
         }
     } else {
-        $message = "Please fill in all required fields.";
+        $_SESSION['message'] = "Please fill in all required fields.";
     }
+    // Redirect to the same page to clear form inputs and show message only once
+    header('Location: menu_add.php');
+    exit();
+}
+
+// Retrieve the message from session (if any) and then unset it
+$message = "";
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);  // Clear the message after displaying it
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -60,13 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Add Menu Item</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="stylesheet" href="../../assets/css/component.css">
     <link rel="stylesheet" href="../../assets/css/responsive.css">
     <link rel="stylesheet" href="../../assets/css/user_content.css">
     <link rel="stylesheet" href="../../assets/css/user_add.css">
-
+    <link rel="stylesheet" href="../../assets/css/menu_add.css">
 </head>
 
 <body class="dashboard">
@@ -119,57 +117,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="dash-menu-txt">
                             <span class="dash dropdown" onclick="dropdown_show(this)">Menu</span>
                             <div class="dropdown-content" style="display: none;">
-                                <a href="#">View </a>
-                                <a href="#">Add Menu</a>
+                                <a href="../admin/menu_view.php">View </a>
+                                <a href="../admin/menu_add.php">Add Menu</a>
                             </div>
                         </div>
                     </div>
 
-                    <button  class="btn reg-btn dash"><a href="../admin/admin_dash.php"  style="text-decoration: none;">Back</a>
+                    <button class="btn reg-btn dash"><a href="../admin/admin_dash.php" style="text-decoration: none;">Back</a>
                     </button>
 
                 </div>
             </div>
         </div>
-
-
         <div class="dash-reg-view-wrapper">
             <div class="dash-view-txt user-add">
                 <h1>DASHBOARD</h1>
             </div>
-            <div class="reg-wrapper dash">
+            <div class="reg-wrapper dash menu">
                 <div class="reg-headline">
                     <h2>Add Food</h2>
                 </div>
-                <div class="reg-img ">
+                <div class="reg-img">
                     <img src="../../assets/image/icon/eat.png">
                 </div>
                 <div class="reg-info-container">
-                
                     <?php if ($message): ?>
-                        <p style="    margin-bottom: 8px;color: darkblue;font-size: 20px;margin-top: -22px;"><?php echo $message; ?></p>
+                        <p style="margin-bottom: 8px; color: darkblue; font-size: 20px; margin-top: -22px;"><?php echo htmlspecialchars($message); ?></p>
                     <?php endif; ?>
-                    <form action="../admin/user_add.php" method="POST">
-                        <div class="std-teach name">
+                    <form action="menu_add.php" method="POST" enctype="multipart/form-data">
+                        <div class="std-teach image">
                             <label for="image">Image:</label>
-                            <input type="file" id="reg-std-image-value" name="reg-std-image-value" required>
+                            <input type="file" id="food_image" name="image" required>
                         </div>
                         <div class="std-teach name">
                             <label for="name">Name:</label>
-                            <input type="text" id="reg-std-name-value" name="reg-std-name-value" required>
+                            <input type="text" id="food_menu_name" name="food_name" required>
                         </div>
-                        <div class="std-teach roll">
+                        <div class="std-teach price">
                             <label for="price">Price:</label>
-                            <input type="number" id="reg-std-price-value" name="reg-std-price-value" required>
+                            <input type="number" id="food_price" name="price" required>
                         </div>
-                       
-                        <div class="std-teach email">
-                            <label for="email">Email:</label>
-                            <input type="text" id="reg-std-email-value" name="reg-std-email-value" required>
+                        <div class="std-teach status">
+                            <label>Status:</label>
+                            <div class="menu_add status">
+                            <label for="status-available">
+                                <input type="radio" id="status-available" value="available" name="status" required>
+                                Available
+                            </label>
+                            <label for="status-unavailable">
+                                <input type="radio" id="status-unavailable" value="unavailable" name="status">
+                                Unavailable
+                            </label>
+                            </div>
                         </div>
-                       
-                        
-                       
+
                         <div class="register-btn">
                             <button type="submit" class="btn reg-btn">Add</button>
                         </div>
@@ -177,16 +178,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </div>
         </div>
-
     </div>
-
-    <script src="../js/dropdown-dash.js">
-        
-        </script>
-
-
-
-
+    <script src="../js/dropdown-dash.js"></script>
 </body>
 
 </html>
