@@ -60,7 +60,7 @@ $adminName = $_SESSION['admin'];
                             <span class="dash dropdown" onclick="dropdown_show(this)">Users</span>
                             <div class="dropdown-content" style="display: none;">
                             <a href="../admin/user_content.php">Users</a>
-                            <a href="../admin/user_add.php">Add User</a>
+                            
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@ $adminName = $_SESSION['admin'];
                             <span class="dash dropdown" onclick="dropdown_show(this)">Staffs</span>
                             <div class="dropdown-content" style="display: none;">
                                 <a href="../admin/staff_view.php">Users</a>
-                                <a href="../admin/staff_add.php">Add Staffs</a>
+                               
                             </div>
                         </div>
                     </div>
@@ -77,8 +77,8 @@ $adminName = $_SESSION['admin'];
                         <div class="dash-menu-txt">
                             <span class="dash dropdown" onclick="dropdown_show(this)">Menu</span>
                             <div class="dropdown-content" style="display: none;">
-                                <a href="#">View </a>
-                                <a href="#">Add Menu</a>
+                                <a href="../cook/cook_menu_view.php">View </a>
+                                <a href="../cook/cook_menu_add.php">Add Menu</a>
                             </div>
                         </div>
                     </div>

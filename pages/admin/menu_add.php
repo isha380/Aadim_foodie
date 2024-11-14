@@ -161,11 +161,11 @@ if (isset($_SESSION['message'])) {
                             <label>Status:</label>
                             <div class="menu_add status">
                             <label for="status-available">
-                                <input type="radio" id="status-available" value="available" name="status" required>
+                                <input type="radio" id="status-available" value="1" name="status" style="background-color: green;" required>
                                 Available
                             </label>
                             <label for="status-unavailable">
-                                <input type="radio" id="status-unavailable" value="unavailable" name="status">
+                                <input type="radio" id="status-unavailable" value="0" name="status" >
                                 Unavailable
                             </label>
                             </div>

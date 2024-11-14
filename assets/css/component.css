@@ -476,7 +476,7 @@ text-decoration: none;
 .menu-container-txt{
   margin: 15px 0px 0px 10px !important;
 }
-#dish-quantity-1{
+.dish-number{
   font-size: 25px;
   background: #FFEBAE;
   width: 35px;
@@ -785,3 +785,54 @@ button.btn.search{
 .search-message p{
   margin: -4px 0px 1px 43px;
 }
+
+/* -----------------------login wrapper----------------- */
+.login-wrapper.std.update{
+margin: 130px 0px 0px 75px;
+}
+.login-wrapper.std.update form{
+  margin: 35px 0px 0px 110px;
+  line-height: 45px;
+}
+.id-num.staff{
+width: 500px;
+background: #FFEBAE;
+height: 50px;
+margin: -34px 0px 0px -110px;
+border-top-left-radius: 46px;
+border-top-right-radius: 42px;
+}
+button.login.update{
+  border-color: #5C5787;
+  height: 40px;
+  width: 86px;
+  border-radius: 20px;
+  background-color: #FFEBAE;
+  margin: 10px 0px 0px 85px;
+
+}
+
+span.total.data{
+  font-size: 25px;
+  margin-left: 310px;
+  text-decoration: underline;
+  font-weight: bold;
+}
+button.total-data{
+  border-color: #5C5787;
+    height: 35px;
+    width: 60px;
+    border-radius: 10px;
+    background-color: #5C5787;
+    
+    color: #FFEBAE;
+    font-size: 25px;
+    font-weight: bold;
+}
+.search-total-wrapper{
+  display: flex;
+}
+
+
+ /* -------------------------------add to cart button menu page-------------------- */
+ 

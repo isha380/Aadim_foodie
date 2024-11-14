@@ -125,8 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="dash-menu-txt">
                             <span class="dash dropdown" onclick="dropdown_show(this)">Menu</span>
                             <div class="dropdown-content" style="display: none;">
-                                <a href="#">View </a>
-                                <a href="#">Add Menu</a>
+                                <a href="../admin/menu_view.php">View </a>
+                                <a href="../admin/menu_add.php">Add Menu</a>
                             </div>
                         </div>
                     </div>

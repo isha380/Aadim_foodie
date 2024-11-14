@@ -1,0 +1,24 @@
+section#food-order-wrapper table,section#food-order-wrapper th, section#food-order-wrappertd {
+    border:2px solid black;
+    border-collapse: collapse;
+padding: 10px;
+   
+}
+.order-wrapper{
+    margin-top: 40px;
+}
+table {
+    width: 100%;
+}
+tr {
+    background-color: #b1c9e9;
+}
+th {
+    background-color: #ececec;
+}
+.reg-wrapper.order{
+    height: 500px;
+    width: 700px;
+    margin-left: 345px;
+    margin-top: 97px;
+}

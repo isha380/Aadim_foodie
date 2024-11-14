@@ -2,30 +2,29 @@
 session_start();
 include "../database/connection.php";
 
-//checking if user logged in
-
+// Checking if user logged in
 if (!isset($_SESSION['admin_id'])) {
     header('Location: admin_login.php'); // Redirect to login if not logged in
     exit();
 }
 
-//retrieve
+// Retrieve admin name
 $adminName = $_SESSION['admin'];
 
-//fetching
- $employee =[];
- $query="SELECT * FROM staff_info ";
- $result = mysqli_query($conn,$query);
- if($result){
-    while($row=mysqli_fetch_assoc($result)){
-        $employee[]=$row;
+// Fetching all students
+$student = [];
+$query = "SELECT * FROM student_info";
+$result = mysqli_query($conn, $query);
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $student[] = $row; // Store all students
     }
- }else{
-    echo "Error ACCESS DENIED!! " .mysqli_error($conn);
- }
+} else {
+    echo "Error ACCESS DENIED!! " . mysqli_error($conn);
+}
 
 // Initialize search results
-$searchResults = $employee; // Default to all students
+$searchResults = $student; // Default to all students
 $searchMessage = ""; // Message variable for search feedback
 
 if (isset($_POST['submit'])) {
@@ -34,7 +33,7 @@ if (isset($_POST['submit'])) {
     if (empty($search)) {
         $searchMessage = "Please enter a search term."; // Message for empty search input
     } else {
-        $sql = "SELECT * FROM staff_info WHERE Staff_Id LIKE '%$search%' OR Name LIKE '%$search%'";
+        $sql = "SELECT * FROM student_info WHERE Rollnum LIKE '%$search%' OR Name LIKE '%$search%'";
         $result = mysqli_query($conn, $sql);
         if ($result) {
             $searchResults = []; // Clear previous results
@@ -50,20 +49,9 @@ if (isset($_POST['submit'])) {
         }
     }
 }
-
-$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM staff_info");
-$stmt->execute();
-$result = $stmt->get_result();
-$data = $result->fetch_assoc();
-
-// Output the total count
-$total = $data['total'];
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,10 +61,9 @@ $total = $data['total'];
     <link rel="stylesheet" href="../../assets/css/responsive.css">
     <link rel="stylesheet" href="../../assets/css/user_content.css">
 </head>
-
 <body class="dashboard">
     <div class="dash-wrapper">
-        <div class="dash-nav-wrapper">
+    <div class="dash-nav-wrapper">
             <div class="dash-nav-img">
                 <img src="../../assets/image/icon/final_light logo.png">
             </div>
@@ -124,8 +111,8 @@ $total = $data['total'];
                         <div class="dash-menu-txt">
                             <span class="dash dropdown" onclick="dropdown_show(this)">Menu</span>
                             <div class="dropdown-content" style="display: none;">
-                                <a href="../admin/menu_view.php">View </a>
-                                <a href="../admin/menu_add.php">Add Menu</a>
+                                <a href="#">View </a>
+                                <a href="#">Add Menu</a>
                             </div>
                         </div>
                     </div>
@@ -140,10 +127,8 @@ $total = $data['total'];
             <div class="dash-view-txt">
                 <h1>DASHBOARD</h1>
             </div>
-            <!-- student info view     -->
-            <button class="student-info-btn">REGISTERED STAFF DETAILS</button>
-            <div class="search-total-wrapper">
-
+            <!-- Student info view -->
+            <button class="student-info-btn">REGISTERED STUDENT DETAILS</button>
             <form method="POST" class="search-wrapper">
                 <div class="search-box">
                     <input type="text" placeholder="Search id/name" name="search_data">
@@ -152,43 +137,39 @@ $total = $data['total'];
                     <button class="btn search" name="submit">Search</button>
                 </div>
             </form>
-            <div class="total-data-container">
-                <span class="total data"> Total staffs:<button class="total-data"><?php echo  $total; ?></button></span>
-            </div>
-            </div>
-
             <?php if ($searchMessage): // Display the search message if it exists ?>
                 <div class="search-message">
                     <p><?php echo htmlspecialchars($searchMessage); ?></p>
                 </div>
             <?php endif; ?>
             <div class="table student">
-                
                 <table>
                     <thead>
                         <tr>
                             <th>Roll Num</th>
                             <th>Name</th>
-                            <th>Role</th>
+                            <th>Faculty</th>
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                     <?php  foreach($searchResults as $staff):    ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($staff['Staff_Id']); ?> </td>
-                            <td><?php echo htmlspecialchars($staff['Name']); ?></td>
-                            <td><?php echo htmlspecialchars($staff['Role']); ?></td>
-                            <td><?php echo htmlspecialchars($staff['Email']); ?></td>
-                            <td><?php echo htmlspecialchars($staff['Phone']); ?></td>
-                            <td>
+                        <?php
+                        // Display search results or all students
+                        foreach ($searchResults as $stud): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($stud['Rollnum']); ?></td>
+                                <td><?php echo htmlspecialchars($stud['Name']); ?></td>
+                                <td><?php echo htmlspecialchars($stud['Faculty']); ?></td>
+                                <td><?php echo htmlspecialchars($stud['Email']); ?></td>
+                                <td><?php echo htmlspecialchars($stud['Phone']); ?></td>
+                                <td>
                                     <div class="action button">
                                         <!-- Update Button -->
                                         <div class="update button">
 
-                                            <a href="update_staff.php?id=<?php echo $staff['Id']; ?>">
+                                            <a href="update_std.php?id=<?php echo $stud['Id']; ?>">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
                                                     <path fill="currentColor" d="M12 21q-1.875 0-3.512-.712t-2.85-1.925t-1.925-2.85T3 12t.713-3.512t1.924-2.85t2.85-1.925T12 3q2.05 0 3.888.875T19 6.35V4h2v6h-6V8h2.75q-1.025-1.4-2.525-2.2T12 5Q9.075 5 7.038 7.038T5 12t2.038 4.963T12 19q2.625 0 4.588-1.7T18.9 13h2.05q-.375 3.425-2.937 5.713T12 21m2.8-4.8L11 12.4V7h2v4.6l3.2 3.2z" />
                                                 </svg>
@@ -197,7 +178,7 @@ $total = $data['total'];
 
                                         <!-- Delete Button -->
                                         <div class="delete button">
-                                            <a href="../admin/delete_staff.php?id=<?php echo $staff['Id']; ?>" onclick="return confirm('Are you sure you want to delete this?')">
+                                            <a href="../admin/delete_std.php?id=<?php echo $stud['Id']; ?>" onclick="return confirm('Are you sure you want to delete this?')">
 
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
                                                     <path fill="currentColor" d="M7.616 20q-.691 0-1.153-.462T6 18.384V6H5V5h4v-.77h6V5h4v1h-1v12.385q0 .69-.462 1.153T16.384 20zm2.192-3h1V8h-1zm3.384 0h1V8h-1z" />
@@ -207,23 +188,13 @@ $total = $data['total'];
                                     </div>
                                 </td>
                         </tr>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-
-
         </div>
-
     </div>
-
-    <script src="../js/dropdown-dash.js">
-        
-        </script>
-
-
-
-
+    <script src="../js/dropdown-dash.js"></script>
 </body>
-
 </html>

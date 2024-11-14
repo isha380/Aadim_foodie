@@ -136,7 +136,7 @@ $conn->close();
                 unset($_SESSION['update_success']); // Remove the message after displaying it
             }
             ?>
-            <div class="login-wrapper std">
+            <div class="login-wrapper std update">
                 <form method="POST" action="update_std.php?id=<?php echo $stud['Id'] ?? ''; ?>">
                     <div class="id-num staff">
                         <span> ID:<?php echo htmlspecialchars($stud['Id']) ?></span> <br>
@@ -153,7 +153,7 @@ $conn->close();
                     <label>Faculty:</label>
                     <input type="text" name="faculty" value="<?php echo htmlspecialchars($stud['Faculty'] ?? ''); ?>" required><br>
 
-                    <button type="submit">Update</button>
+                    <button type="submit" class="login update">Update</button>
                 </form>
             </div>
         </div>

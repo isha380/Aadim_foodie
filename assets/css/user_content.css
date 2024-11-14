@@ -18,7 +18,9 @@ th{
 tr{
     background-color:   #b1c9e9; 
 }
-
+.wide-column{
+    width: 1000px;
+}
 button.student-info-btn{
     height: 60px;
     width: 292px;

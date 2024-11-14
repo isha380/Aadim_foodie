@@ -9,52 +9,69 @@ if (!isset($_SESSION['admin_id'])) {
 
 $adminName = $_SESSION['admin'];
 
-// Initialize the $stud variable to avoid "undefined variable" warnings
-$staff = null;
+// Initialize the $food variable to avoid "undefined variable" warnings
+$food = null;
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Prepare and execute query to fetch student data
-    $stmt = $conn->prepare("SELECT * FROM staff_info WHERE Id = ?");
+    // Prepare and execute query to fetch food item data
+    $stmt = $conn->prepare("SELECT * FROM menu_items WHERE Id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $staff = $result->fetch_assoc();
+        $food = $result->fetch_assoc();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Prepare and execute update query
-            $name = $_POST['name'];
-            $phone = $_POST['phone'];
-            $email = $_POST['email'];
-            $role = $_POST['role'];
+            $name = $_POST['food_name'];
+            $price = $_POST['price'];
+            $status = $_POST['status'];
+        
+            // Handle the file upload
+            if (!empty($_FILES['image']['name'])) {
+                // A new image is uploaded
+                $file_name = $_FILES['image']['name'];
+                $temp_name = $_FILES['image']['tmp_name'];
+                $folder =  $file_name;
 
-            $updateStmt = $conn->prepare("UPDATE staff_info SET Name = ?, Phone = ?, Email = ?, Role = ? WHERE Id = ?");
-            $updateStmt->bind_param("ssssi", $name, $phone, $email, $role, $id); // Correct binding types
-
+        
+                // Move the uploaded file to the target folder
+                if (move_uploaded_file($temp_name, $folder)) {
+                    $imagePath = $folder; // path for updating the database
+                } else {
+                    $_SESSION['message'] = "Failed to upload the image.";
+                    $imagePath = $food['Image']; // keep the old image if the upload fails
+                }
+            } else {
+                // No new image uploaded, keep the old one
+                $imagePath = $food['Image'];
+            }
+        
+            // Prepare and execute the update query
+            $updateStmt = $conn->prepare("UPDATE menu_items SET Image = ?, Name = ?, Price = ?, Status = ? WHERE Id = ?");
+            $updateStmt->bind_param("ssssi", $imagePath, $name, $price, $status, $id);
+        
             if ($updateStmt->execute()) {
                 $_SESSION['update_success'] = "Updated Successfully!";
-                header("Location: update_staff.php?id=" . $id); // Redirect to the same page with the updated ID
+                header("Location: cook_update_menu.php?id=" . $id);
                 exit();
             } else {
                 echo "Error updating record: " . $conn->error;
             }
-
             $updateStmt->close();
         }
-    } else {
-        echo "Invalid student ID.";
     }
-
-    $stmt->close();
 } else {
     echo "Invalid request.";
 }
 
+$stmt->close();
 $conn->close();
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,14 +79,14 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Student</title>
+    <title>Update Menu</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="stylesheet" href="../../assets/css/component.css">
     <link rel="stylesheet" href="../../assets/css/responsive.css">
     <link rel="stylesheet" href="../../assets/css/user_content.css">
 </head>
 
-<body>
+<body class="bg-img update-std">
     <div class="dash-wrapper">
         <div class="dash-nav-wrapper">
             <div class="dash-nav-img">
@@ -117,8 +134,8 @@ $conn->close();
                         <div class="dash-menu-txt">
                             <span class="dash dropdown" onclick="dropdown_show(this)">Menu</span>
                             <div class="dropdown-content" style="display: none;">
-                                <a href="#">View </a>
-                                <a href="#">Add Menu</a>
+                                <a href="../admin/menu_view.php">View </a>
+                                <a href="../admin/menu_add.php">Add Menu</a>
                             </div>
                         </div>
                     </div>
@@ -137,21 +154,31 @@ $conn->close();
             }
             ?>
             <div class="login-wrapper std update">
-                <form method="POST" action="update_staff.php?id=<?php echo $staff['Id'] ?? ''; ?>">
+                <form method="POST" action="update_menu.php?id=<?php echo $food['Id'] ?? ''; ?>" enctype="multipart/form-data">
                     <div class="id-num staff update">
-                        <span> ID:<?php echo htmlspecialchars($staff['Id']) ?></span> <br>
+                        <span> ID:<?php echo htmlspecialchars($food['Id']) ?></span> <br>
                     </div>
+                    <label>Image:</label>
+                    <input type="file" name="image"  ><br>
+                    <?php if (!empty($food['Image'])): ?>
+    <p>Current Image:</p>
+    <img src="../../assets/image/menu/<?php echo htmlspecialchars($food['Image']); ?>" alt="Current Image" style="width: 150px; height: auto;">
+<?php endif; ?>
+
+
                     <label>Name:</label>
-                    <input type="text" name="name" value="<?php echo htmlspecialchars($staff['Name'] ?? ''); ?>" required><br>
+                    <input type="text" name="food_name" value="<?php echo htmlspecialchars($food['Name'] ?? ''); ?>" required><br>
 
-                    <label>Phone:</label>
-                    <input type="text" name="phone" value="<?php echo htmlspecialchars($staff['Phone'] ?? ''); ?>" required><br>
+                   
+                    <label for="status-available">
+                        <input type="radio" id="status-available" value="1" name="status" <?php echo ($food['Status'] == '1') ? 'checked' : ''; ?> required>
+                        Available
+                    </label>
+                    <label for="status-unavailable">
+                        <input type="radio" id="status-unavailable" value="0" name="status" <?php echo ($food['Status'] == '0') ? 'checked' : ''; ?>>
+                        Unavailable
+                    </label>
 
-                    <label>Email:</label>
-                    <input type="email" name="email" value="<?php echo htmlspecialchars($staff['Email'] ?? ''); ?>" required><br>
-
-                    <label>Role:</label>
-                    <input type="text" name="role" value="<?php echo htmlspecialchars($staff['Role'] ?? ''); ?>" required><br>
 
                     <button type="submit" class="login update">Update</button>
                 </form>
