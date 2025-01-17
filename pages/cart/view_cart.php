@@ -89,7 +89,7 @@ include "./managecart.php";
                     </td>
                     <td>
                         <input type="hidden" name="order_price" value="<?php echo number_format($item_total_price, 2); ?>" readonly>
-                        <h5><?php echo number_format($total, 2); ?> </h5>
+                        <h5><?php echo number_format($item_total_price, 2); ?></h5>
 
                     </td>
                     <td>

@@ -64,7 +64,7 @@ $userName = $_SESSION['name'];
     <section id="menu-food-info-wrapper">
         <div class="menu-container-headline">
             <span class="menu-container-txt">OUR CULINARY DELIGHTS</span>
-            
+
         </div>
 
         <div class="menu-container">
@@ -142,7 +142,7 @@ $userName = $_SESSION['name'];
                                     <!-- Hidden Inputs for Order Details -->
                                     <input type="hidden" name="order_name" value="<?php echo htmlspecialchars($row['Name']); ?>">
                                     <input type="hidden" name="order_price" value="<?php echo htmlspecialchars($row['Price']); ?>">
-                                   
+
 
                                 </div>
                             </div>
@@ -153,31 +153,30 @@ $userName = $_SESSION['name'];
         </div>
     </section>
 
-    
+
     <script src="../pages/js/slide.js"></script>
     <script>
-       // Increment Quantity
-function incrementQuantity(displayId, inputId) {
-    const quantityElement = document.getElementById(displayId);
-    const quantityInput = document.getElementById(inputId);
-    let quantity = parseInt(quantityElement.textContent);
-    quantity++;
-    quantityElement.textContent = quantity;
-    quantityInput.value = quantity; // Update the hidden input
-}
+        // Increment Quantity
+        function incrementQuantity(displayId) {
+            const quantityElement = document.getElementById(displayId);
+            const quantityInput = document.getElementById('order-' + displayId);
+            let quantity = parseInt(quantityElement.textContent);
+            quantity++;
+            quantityElement.textContent = quantity;
+            quantityInput.value = quantity; // Sync hidden input
+        }
 
-// Decrement Quantity
-function decrementQuantity(displayId, inputId) {
-    const quantityElement = document.getElementById(displayId);
-    const quantityInput = document.getElementById(inputId);
-    let quantity = parseInt(quantityElement.textContent);
-    if (quantity > 1) {
-        quantity--;
-        quantityElement.textContent = quantity;
-        quantityInput.value = quantity; // Update the hidden input
-    }
-}
-
+        // Decrement Quantity
+        function decrementQuantity(displayId) {
+            const quantityElement = document.getElementById(displayId);
+            const quantityInput = document.getElementById('order-' + displayId);
+            let quantity = parseInt(quantityElement.textContent);
+            if (quantity > 1) {
+                quantity--;
+                quantityElement.textContent = quantity;
+                quantityInput.value = quantity; // Sync hidden input
+            }
+        }
     </script>
 </body>
 
