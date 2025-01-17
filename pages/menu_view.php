@@ -68,18 +68,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu</title>
+    <title>View Menu</title>
     <link rel="stylesheet" href="../assets/css/component.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/menu_view.css">
     <link rel="stylesheet" href="../assets/css/order_table.css">
 </head>
 
-<body class="menu-body">
+<body id="menu-view">
 
-    <!-- --------------------menu info section ------------------------------------------------------ -->
-    <section id="menu-info-wrapper">
-
+    <section id="menu-food-info-wrapper view">
         <div class="menu-headline">
 
             <div class="navBar-banner-headings menu">
@@ -100,44 +99,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
         </div>
-
-        <div class="menu-banner">
-            <div class="menu-profile-name">
-                <h1>Welcome, <?php echo htmlspecialchars($userName); ?></h1>
-            </div>
-            <div class="menu-info">
-                <span class="menu-info-txt">Hungry for something amazing? <br>Let us bring the feast to you.<br>" Order your favorites now! "
-                </span>
-                <button class="btn reg-btn menu "><a href="#menu-food-info-wrapper">
-                        ORDER FOOD
-                    </a>
-                </button>
-
-            </div>
-        </div>
-    </section>
-
-    <!----------------------menu food info section-------------------------------------------------------->
-
-    <section id="menu-food-info-wrapper">
-        <div class="menu-container-headline">
+        <div class="menu-container-headline view">
             <span class="menu-container-txt">OUR CULINARY DELIGHTS</span>
         </div>
 
-        <div class="menu-container">
+        <div class="menu-container-view">
 
 
-            <button class=" arrow menu pre"><svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 1024 1024">
-                    <path fill=" #543787" d="M685.248 104.704a64 64 0 0 1 0 90.496L368.448 512l316.8 316.8a64 64 0 0 1-90.496 90.496L232.704 557.248a64 64 0 0 1 0-90.496l362.048-362.048a64 64 0 0 1 90.496 0" />
-                </svg></button>
-
-
-            <button class="arrow menu next"><svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 1024 1024">
-                    <path fill="#543787" d="M338.752 104.704a64 64 0 0 0 0 90.496l316.8 316.8l-316.8 316.8a64 64 0 0 0 90.496 90.496l362.048-362.048a64 64 0 0 0 0-90.496L429.248 104.704a64 64 0 0 0-90.496 0" />
-                </svg></button>
-
-
-            <div class="dish-slide-container menu">
+            <div class="dish-slide-container menu view">
                 <?php
 
 
@@ -203,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     ?>
                                     <input type="hidden" name="order_name" value="<?php $row['Name'] ?>">
                                     <input type="hidden" name="order_price" value="<?php $row['Price'] ?>">
-                                    <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="quantity" value="<?php $row['Price'] ?>">
+                                    <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="quantity" value="1">
                                 </div>
                     </form>
             </div>
@@ -216,85 +185,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     </section>
 
-    <!--------------------------------------menu food order info section------------------------->
-
-    <section id="food-order-wrapper">
-        <div class="reg-wrapper order">
-            <div class="reg-headline order">
-                <?php
-                $count = 0;
-                if (isset($_SESSION['cart'])) {
-                    $count = count($_SESSION['cart']);
-                }
-
-                ?>
-                <div class="order_title">
-                    <h2>My Orders</h2>
-                    <div class="order_count"><?php echo $count; ?></div>
-                </div>
-            </div>
-            <div class="order-wrapper">
-                <table class="my_order">
-                    <thead>
-                        <tr>
-                            <th>S.No</th>
-                            <th>Dish Name</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Action</th>
-
-                        </tr>
-                    </thead>
-                    <!-- <tbody>
-            
-                        <?php
-                        print_r($_SESSION['cart']);
-                        $total = 0;
-                        $counter = 0;
-                        if (isset($_SESSION['cart'])) {
-
-                            foreach ($_SESSION['cart'] as $key => $value) {
-                                echo ($value);
-                                $total = $total + $value['order_price'];
-                                echo "
-                            <tr>
-                             <td> ++$counter </td>
-                             <td>$value[order_name]</td>
-                    
-                             <td>$value[quantity]</td>
-                             <td>$value[order_price]</td>
-                             <td>
-                                <form action='managecart.php' method='POST'>
-                                    <button name='remove_dish'>Remove</button>
-                                    <input type='hidden' name='order_name' value='$value[order_name]'>
-                                </form>
-                             </td>
-                            </tr>
-                            ";
-                            }
-                        }
-                        ?>
-                      
-
-                    </tbody> -->
-                </table>
-                <div class="order-total-wrapper">
-                    <div class="total-container">
-                        <h3>Total:</h3>
-                        <h5><?php echo  $total ?></h5>
-                        <form>
-                            <button>Purchase</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <script src="./js/slide.js">
-
-    </script>
 
     <script>
         // Update button state for decrement button
