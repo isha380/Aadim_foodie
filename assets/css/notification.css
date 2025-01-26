@@ -1,0 +1,90 @@
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.notification-popup {
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    margin-bottom: 10px;
+    max-width: 300px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+}
+
+.notification-popup.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-popup.hiding {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.notification-content {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    min-height: 20px;
+}
+
+.notification-icon {
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.notification-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.notification-icon.success svg {
+    stroke: #4CAF50;
+}
+
+.notification-icon.error svg {
+    stroke: #f44336;
+}
+
+.notification-message {
+    flex-grow: 1;
+    margin-right: 12px;
+    font-size: 14px;
+    color: #333;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+.notification-close svg {
+    width: 16px;
+    height: 16px;
+    stroke: #666;
+}
+
+/* Success notification styles */
+.notification-popup.success {
+    border-left: 4px solid #4CAF50;
+}
+
+/* Error notification styles */
+.notification-popup.error {
+    border-left: 4px solid #f44336;
+}

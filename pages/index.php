@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/component.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
-    <link rel="" href="">
+    
 </head>
 
 <body>
@@ -22,7 +22,7 @@
                     <li><a  class="active"href="login.php">Home</a></li>
                     <li><a class="active" href="#">About us</a></li>
                     <li><a  class="active" href="#">Contact</a></li>
-                    <li><a class="active" href="menu_view.php">view menu</a></li>
+                    <li><a class="active" href="../pages/menu_view.php">view menu</a></li>
                     <li><a href="login.php">login/signUp</a></li>
 
                 </ul>

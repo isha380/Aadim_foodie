@@ -3,62 +3,9 @@ session_start();
 include "../pages/database/connection.php";
 include "./cart/managecart.php";
 
-if (!isset($_SESSION['roll']) || !isset($_SESSION['name'])) {
-    header("Location: login.php");
-    exit();
-}
 
-$userName = $_SESSION['name'];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['add_to_cart'])) {
-        $itemName = $_POST['item_name'];
-        $itemPrice = $_POST['item_price'];
-        $itemQuantity = 1; // Default quantity for new items
-
-        if (isset($_SESSION['cart'])) {
-            $myitems = array_column($_SESSION['cart'], 'order_name');
-
-            // Check if the item is already in the cart
-            if (in_array($itemName, $myitems)) {
-                echo "<script>
-                    alert('Dish already added');
-                    window.location.href='menu.php';
-                </script>";
-            } else {
-                $count = count($_SESSION['cart']);
-                $_SESSION['cart'][$count] = array('order_name' => $itemName, 'Price' => $itemPrice, 'Quantity' => $itemQuantity);
-                echo "<script>
-                    alert('Dish added');
-                    window.location.href='menu.php';
-                </script>";
-            }
-        } else {
-            // First item in the cart
-            $_SESSION['cart'][0] = array('order_name' => $itemName, 'Price' => $itemPrice, 'Quantity' => $itemQuantity);
-            echo "<script>
-                alert('Dish added');
-                window.location.href='menu.php';
-            </script>";
-        }
-    }
-
-    if (isset($_POST['remove_button'])) {
-        foreach ($_SESSION['cart'] as $key => $value) {
-            if ($value['order_name'] == $_POST['item_name']) {
-                unset($_SESSION['cart'][$key]);
-                $_SESSION['cart'] = array_values($_SESSION['cart']); // Re-index the array
-                echo "<script>
-                    alert('Order removed');
-                    window.location.href='menu.php';
-                </script>";
-                break;
-            }
-        }
-    }
-}
 ?>
-
 
 
 
@@ -92,6 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <li><a href="#">Contact</a></li>
                         <li><a href="#menu-food-info-wrapper">View Menu</a></li>
                         <li><a href="logout.php">Log out</a></li>
+                        <li><a href="index.php"><button>Back</button></a></li>
 
 
                     </ul>
@@ -116,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 while ($row = mysqli_fetch_assoc($res)) {
 
                 ?>
-                    <form method="POST" action="./cart/managecart.php">
+                    <form method="POST" action="../pages/login.php">
                         <div class="dish-content-wrapper menu">
                             <div class="dish-image">
                                 <img src="../assets/image/menu/<?php echo htmlspecialchars($row['Image']); ?>" alt="Dish Image">
@@ -153,26 +101,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
 
                                 <div class="add-to-cart-button">
-
-                                    <?php
-                                    if ($row['Status'] == '0') {
-                                        echo  '<button class="btn cart-btn" onclick="alert(\'This dish is not available for now\')">
-                                     <span class="cart-btn-text">Add to cart</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <button class="btn cart-btn" onclick="location.href='../login.php';" style="color:#feb737 ;"><span class="cart-btn-text">Add to cart</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
-                                    </svg></button>';
-                                    } else {
-                                        echo  '<button class="btn cart-btn" type="submit" name="add_to_cart">
-                                     <span class="cart-btn-text">Add to cart</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
-                                    </svg></button>';
-                                    }
+                                    </svg></button>
 
-                                    ?>
-                                    <input type="hidden" name="order_name" value="<?php $row['Name'] ?>">
-                                    <input type="hidden" name="order_price" value="<?php $row['Price'] ?>">
-                                    <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="quantity" value="1">
+                               
+                                   
                                 </div>
                     </form>
             </div>

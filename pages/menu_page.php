@@ -42,6 +42,7 @@ $userName = $_SESSION['name'];
                         <li><a href="#">Contact</a></li>
                         <li><a href="#menu-food-info-wrapper">View Menu</a></li>
                         <li><a href="logout.php">Log out</a></li>
+                        
                     </ul>
                 </div>
             </div>
@@ -64,8 +65,9 @@ $userName = $_SESSION['name'];
     <section id="menu-food-info-wrapper">
         <div class="menu-container-headline">
             <span class="menu-container-txt">OUR CULINARY DELIGHTS</span>
-
+           
         </div>
+        <li><a href="../pages/cart/view_cart.php"><button>CART</button></a></li>
 
         <div class="menu-container">
             <button class="arrow menu pre">
@@ -108,7 +110,7 @@ $userName = $_SESSION['name'];
                                     <span class="dish-status-text">Status:
                                         <button class="dish-status-label" id="dish-status"
                                             <?php if ($row['Status'] == '1') {
-                                                echo 'style="background-color: #6EC531; color: #FEB737;"';
+                                                echo 'style="background-color:rgb(64, 145, 6); color: #FEB737;"';
                                             } ?>>
                                             <?php echo ($row['Status'] == '1') ? 'Available' : 'Unavailable'; ?>
                                         </button>
@@ -124,7 +126,9 @@ $userName = $_SESSION['name'];
                                         onclick="incrementQuantity('dish-quantity-<?php echo $row['Id']; ?>')">+</button>
 
                                     <!-- Hidden input for quantity -->
-                                    <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="quantity" value="1">
+                                   
+                                    <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="order_quantity" value="1">
+
                                 </div>
 
                                 <!-- Add to Cart Button -->
@@ -140,8 +144,9 @@ $userName = $_SESSION['name'];
                                     <?php } ?>
 
                                     <!-- Hidden Inputs for Order Details -->
-                                    <input type="hidden" name="order_name" value="<?php echo htmlspecialchars($row['Name']); ?>">
-                                    <input type="hidden" name="order_price" value="<?php echo htmlspecialchars($row['Price']); ?>">
+                                    
+                                    <input type="hidden" name="order_name" value=" <?echo htmlspecialchars($row['Name']); ?>">
+                                    <input type="hidden" name="order_price" value="<? echo htmlspecialchars($row['Price']); ?>">
 
 
                                 </div>
@@ -157,19 +162,39 @@ $userName = $_SESSION['name'];
     <script src="../pages/js/slide.js"></script>
     <script>
         // Increment Quantity
+        // function incrementQuantity(displayId) {
+        //     const quantityElement = document.getElementById(displayId);
+        //     const quantityInput = document.getElementById('order-' + displayId);
+        //     let quantity = parseInt(quantityElement.textContent);
+        //     quantity++;
+        //     quantityElement.textContent = quantity;
+        //     quantityInput.value = quantity; // Sync hidden input
+        // }
+
+        // Decrement Quantity
+        // function decrementQuantity(displayId) {
+        //     const quantityElement = document.getElementById(displayId);
+        //     const quantityInput = document.getElementById('order-' + displayId);
+        //     let quantity = parseInt(quantityElement.textContent);
+        //     if (quantity > 1) {
+        //         quantity--;
+        //         quantityElement.textContent = quantity;
+        //         quantityInput.value = quantity; // Sync hidden input
+        //     }
+        // }
+
         function incrementQuantity(displayId) {
             const quantityElement = document.getElementById(displayId);
-            const quantityInput = document.getElementById('order-' + displayId);
+            const quantityInput = document.querySelector(`input#order-quantity-${displayId.split('-').pop()}`);
             let quantity = parseInt(quantityElement.textContent);
             quantity++;
             quantityElement.textContent = quantity;
             quantityInput.value = quantity; // Sync hidden input
         }
 
-        // Decrement Quantity
         function decrementQuantity(displayId) {
             const quantityElement = document.getElementById(displayId);
-            const quantityInput = document.getElementById('order-' + displayId);
+            const quantityInput = document.querySelector(`input#order-quantity-${displayId.split('-').pop()}`);
             let quantity = parseInt(quantityElement.textContent);
             if (quantity > 1) {
                 quantity--;

@@ -41,6 +41,7 @@ include "./managecart.php";
                         <li><a href="#">Contact</a></li>
                         <li><a href="#menu-food-info-wrapper">View Menu</a></li>
                         <li><a href="logout.php">Log out</a></li>
+                        <li><a href="../menu_page.php"><button>Back</button></a></li>
                     </ul>
                 </div>
             </div>
@@ -50,7 +51,7 @@ include "./managecart.php";
             <div class="reg-headline order">
                 <div class="order_title">
                     <h2>My Orders</h2>
-                    <div class="order_count"><?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?></div>
+                    <div class="order_count">Total orders:<?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?></div>
                 </div>
             </div>
 
@@ -72,7 +73,7 @@ include "./managecart.php";
     if (isset($_SESSION['cart'])) {
         foreach ($_SESSION['cart'] as $key => $item) {
             // Ensure numeric values
-            $orderPrice = floatval($item['orderPrice']);
+            echo $orderPrice = floatval($item['orderPrice']);
             $orderQuantity = intval($item['orderQuantity']);
             $item_total_price = $orderPrice * $orderQuantity;
             $total += $item_total_price;
@@ -114,9 +115,13 @@ include "./managecart.php";
                     <div class="total-container">
                         <h3>Total:</h3>
                         <h5>Rs.<?php echo $total; ?></h5>
-                        <form method="POST" action="purchase.php">
+                        <form method="POST" action="../order/purchase.php">
                             <button type="submit">Purchase</button>
                         </form>
+                    </div>
+                    <div class="back-btn">
+                    <button onclick="window.location.href='../../pages/menu_page.php';">Back</button>
+
                     </div>
                 </div>
             </div>
