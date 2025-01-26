@@ -23,7 +23,10 @@ $userName = $_SESSION['name'];
     <link rel="stylesheet" href="../assets/css/component.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/notification.css">
     <link rel="stylesheet" href="../assets/css/order_table.css">
+    <script src="./js/notify.js"></script> 
+    
 </head>
 
 <body class="menu-body">
@@ -47,6 +50,15 @@ $userName = $_SESSION['name'];
                 </div>
             </div>
         </div>
+        <?php
+            if (isset($_SESSION['message'])) {
+                $messageType = $_SESSION['message_type'] ?? 'success';
+                echo "<script>showAlert('" . htmlspecialchars($_SESSION['message']) . "');</script>";
+                unset($_SESSION['message']);
+                unset($_SESSION['message_type']);
+            }
+        ?>
+
 
         <div class="menu-banner">
             <div class="menu-profile-name">
@@ -145,9 +157,11 @@ $userName = $_SESSION['name'];
 
                                     <!-- Hidden Inputs for Order Details -->
                                     
-                                    <input type="hidden" name="order_name" value=" <?echo htmlspecialchars($row['Name']); ?>">
-                                    <input type="hidden" name="order_price" value="<? echo htmlspecialchars($row['Price']); ?>">
-
+                                    <!-- <input type="hidden" name="order_name" value=" <?echo htmlspecialchars($row['Name']); ?>">
+                                    <input type="hidden" name="order_price" value="<? echo htmlspecialchars($row['Price']); ?>"> -->
+                                    <input type="hidden" name="image" value="../assets/image/menu/<?php echo htmlspecialchars($row['Image']); ?>">
+                                    <input type="hidden" name="order_name" value="<?php echo htmlspecialchars($row['Name']); ?>">
+                                    <input type="hidden" name="order_price" value="<?php echo htmlspecialchars($row['Price']); ?>">
 
                                 </div>
                             </div>
@@ -183,23 +197,48 @@ $userName = $_SESSION['name'];
         //     }
         // }
 
-        function incrementQuantity(displayId) {
-            const quantityElement = document.getElementById(displayId);
-            const quantityInput = document.querySelector(`input#order-quantity-${displayId.split('-').pop()}`);
-            let quantity = parseInt(quantityElement.textContent);
-            quantity++;
-            quantityElement.textContent = quantity;
-            quantityInput.value = quantity; // Sync hidden input
+        // function incrementQuantity(displayId) {
+        //     const quantityElement = document.getElementById(displayId);
+        //     const quantityInput = document.querySelector(`input#order-quantity-${displayId.split('-').pop()}`);
+        //     let quantity = parseInt(quantityElement.textContent);
+        //     quantity++;
+        //     quantityElement.textContent = quantity;
+        //     quantityInput.value = quantity; // Sync hidden input
+        // }
+
+        // function decrementQuantity(displayId) {
+        //     const quantityElement = document.getElementById(displayId);
+        //     const quantityInput = document.querySelector(`input#order-quantity-${displayId.split('-').pop()}`);
+        //     let quantity = parseInt(quantityElement.textContent);
+        //     if (quantity > 1) {
+        //         quantity--;
+        //         quantityElement.textContent = quantity;
+        //         quantityInput.value = quantity; // Sync hidden input
+        //     }
+        // }
+        function incrementQuantity(id, maxLimit = 10) {
+            const quantityElem = document.getElementById(id);
+            const quantityInput = document.getElementById('order-quantity-' + id.split('-').pop());
+            let quantity = parseInt(quantityElem.textContent);
+            
+            if (quantity < maxLimit) {
+                quantity++;
+                quantityElem.textContent = quantity;
+                quantityInput.value = quantity;
+            } else {
+                showAlert('Maximum quantity limit reached', 'warning');
+            }
         }
 
-        function decrementQuantity(displayId) {
-            const quantityElement = document.getElementById(displayId);
-            const quantityInput = document.querySelector(`input#order-quantity-${displayId.split('-').pop()}`);
-            let quantity = parseInt(quantityElement.textContent);
-            if (quantity > 1) {
+        function decrementQuantity(id, minLimit = 1) {
+            const quantityElem = document.getElementById(id);
+            const quantityInput = document.getElementById('order-quantity-' + id.split('-').pop());
+            let quantity = parseInt(quantityElem.textContent);
+            
+            if (quantity > minLimit) {
                 quantity--;
-                quantityElement.textContent = quantity;
-                quantityInput.value = quantity; // Sync hidden input
+                quantityElem.textContent = quantity;
+                quantityInput.value = quantity;
             }
         }
     </script>

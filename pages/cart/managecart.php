@@ -1,153 +1,96 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $order_name = htmlspecialchars(trim($_POST['order_name'] ?? ''));
-    $order_price = floatval($_POST['order_price'] ?? 0);
-    $order_quantity = intval($_POST['order_quantity'] ?? 1);
-
-    error_log("POST data: " . print_r($_POST, true)); // Debugging
-
-    // Add to Cart
+    // Add to cart
     if (isset($_POST['add_to_cart'])) {
-        if (!isset($_SESSION['cart'])) {
-            $_SESSION['cart'] = [];
-        }
+        // Ensure order_quantity is set and is a positive integer
+        $order_quantity = isset($_POST['order_quantity']) ? max(1, intval($_POST['order_quantity'])) : 1;
 
-        $check_product = array_column($_SESSION['cart'], 'orderName');
-        if (in_array($order_name, $check_product)) {
-            $_SESSION['message'] = "Order already placed!";
-            header("Location: ../menu_page.php");
-            exit;
-        }
+        if (isset($_SESSION['cart'])) {
+            $myitems = array_column($_SESSION['cart'], 'order_name');
 
-        $_SESSION['cart'][] = [
-            'orderName' => $order_name,
-            'orderPrice' => $order_price,
-            'orderQuantity' => $order_quantity
-        ];
-        $_SESSION['message'] = "Item added to cart!";
-        error_log("Cart after addition: " . print_r($_SESSION['cart'], true)); // Debugging
-        header("Location: view_cart.php");
-        exit;
-    }
-
-    // Remove Item
-    if (isset($_POST['remove_item'])) {
-        foreach ($_SESSION['cart'] as $key => $value) {
-            if ($value['orderName'] === $order_name) {
-                unset($_SESSION['cart'][$key]);
-                $_SESSION['cart'] = array_values($_SESSION['cart']); // Reindex array
-                $_SESSION['message'] = "Item removed successfully!";
-                break;
-            }
-        }
-        header("Location: view_cart.php");
-        exit;
-    }
-
-    // Update Item
-    if (isset($_POST['update_item'])) {
-        foreach ($_SESSION['cart'] as $key => $item) {
-            if ($item['orderName'] === $order_name) {
-                if ($order_quantity > 0) {
-                    $_SESSION['cart'][$key]['orderQuantity'] = $order_quantity;
-                    $_SESSION['message'] = "Item updated successfully!";
-                } else {
-                    $_SESSION['message'] = "Quantity must be greater than 0!";
+            if (in_array($_POST['order_name'], $myitems)) {
+                // Update quantity if item already exists
+                foreach ($_SESSION['cart'] as $key => $item) {
+                    if ($item['order_name'] === $_POST['order_name']) {
+                        $_SESSION['cart'][$key]['order_quantity'] += $order_quantity;
+                        break;
+                    }
                 }
-                break;
+                $_SESSION['message'] = "Quantity updated for {$_POST['order_name']}.";
+                $_SESSION['message_type'] = 'error';
+            } else {
+                // Add new item to cart
+                $_SESSION['cart'][] = array(
+                    'image' => $_POST['image'] ?? '', // Use null coalescing operator
+                    'order_name' => $_POST['order_name'],
+                    'order_price' => $_POST['order_price'],
+                    'order_quantity' => $order_quantity
+                );
+                $_SESSION['message'] = "Item added: {$_POST['order_name']}";
+                $_SESSION['message_type'] = 'success';
+            }
+        } else {
+            // First item in cart
+            $_SESSION['cart'] = [
+                [
+                    'image' => $_POST['image'] ?? '',
+                    'order_name' => $_POST['order_name'],
+                    'order_price' => $_POST['order_price'],
+                    'order_quantity' => $order_quantity
+                ]
+            ];
+            $_SESSION['message'] = "Item added: {$_POST['order_name']}";
+            $_SESSION['message_type'] = 'success';
+        }
+    } 
+    // Remove item from cart
+    elseif (isset($_POST['remove_item']) && isset($_POST['order_name'])) {
+        $order_name = $_POST['order_name'];
+    
+        if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
+            $_SESSION['cart'] = array_filter($_SESSION['cart'], function($item) use ($order_name) {
+                return $item['order_name'] !== $order_name;
+            });
+    
+            $_SESSION['message'] = "Item removed: $order_name";
+            $_SESSION['message_type'] = 'success';
+        } else {
+            $_SESSION['message'] = "Cart is empty.";
+            $_SESSION['message_type'] = 'warning';
+        }
+    }
+    //update item qty  from view cart page
+    elseif (isset($_POST['update_item']) && isset($_POST['order_name'])) {
+        $order_name = $_POST['order_name'];
+        $new_quantity = max(1, intval($_POST['order_quantity']));
+    
+        if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+            foreach ($_SESSION['cart'] as $key => $item) {
+                if ($item['order_name'] === $order_name) {
+                    $_SESSION['cart'][$key]['order_quantity'] = $new_quantity;
+                    $_SESSION['message'] = "Quantity updated for $order_name.";
+                    $_SESSION['message_type'] = 'success';
+                    break;
+                }
             }
         }
-        error_log("Cart after update: " . print_r($_SESSION['cart'], true)); // Debugging
-        header("Location: view_cart.php");
-        exit;
+    
+        // Redirect back to cart page
+        header("Location: ../cart/view_cart.php");
+        exit();
     }
+    // Error handling
+    else {
+        $_SESSION['message'] = "An error occurred.";
+        $_SESSION['message_type'] = 'error';
+    }
+
+    // Redirect back to menu
+    header("Location: ../menu_page.php");
+    exit();
 }
-
-/* 
-
-
-// first second
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $order_name = htmlspecialchars(trim($_POST['order_name'] ?? ''));
-    $order_price = floatval($_POST['order_price'] ?? 0);
-    // $order_quantity = intval($_POST['order_quantity'] ?? 1);
-    error_log("Received quantity: " . print_r($_POST['order_quantity'], true));
-
-
-    // Add to Cart
-    if (isset($_POST['add_to_cart'])) {
-        if (!isset($_SESSION['cart'])) {
-            $_SESSION['cart'] = [];
-        }
-
-        $check_product = array_column($_SESSION['cart'], 'orderName');
-        if (in_array($order_name, $check_product)) {
-            $_SESSION['message'] = "Order already placed!";
-            header("Location: ../menu_page.php");
-            exit;
-        }
-
-        $_SESSION['cart'][] = [
-            'orderName' => $order_name,
-            'orderPrice' => $order_price,
-            'orderQuantity' => $order_quantity
-        ];
-        $_SESSION['message'] = "Item added to cart!";
-        header("Location: view_cart.php");
-        exit;
-    }
-
-    // Remove Item
-    if (isset($_POST['remove_item'])) {
-        $order_to_remove = htmlspecialchars(trim($_POST['order_name'] ?? ''));
-        $found = false;
-
-        foreach ($_SESSION['cart'] as $key => $value) {
-            if ($value['orderName'] === $order_to_remove) {
-                unset($_SESSION['cart'][$key]);
-                $_SESSION['cart'] = array_values($_SESSION['cart']); // Reindex array
-                $_SESSION['message'] = "Item removed successfully!";
-                $found = true;
-                break;
-            }
-        }
-
-        if (!$found) {
-            $_SESSION['message'] = "Item not found!";
-        }
-        header("Location: view_cart.php");
-        exit;
-    }
-
-    // Update Item
-    if (isset($_POST['update_item'])) {
-        $found = false;
-
-        foreach ($_SESSION['cart'] as $key => $item) {
-            if ($item['orderName'] === $order_name) {
-                $_SESSION['cart'][$key]['orderQuantity'] = $order_quantity;
-                $_SESSION['message'] = "Item updated successfully!";
-                $found = true;
-                break;
-            }
-        }
-
-        if (!$found) {
-            $_SESSION['message'] = "Item not found for update!";
-        }
-        header("Location: view_cart.php");
-        exit;
-    }
-}
-
 ?>
-*/

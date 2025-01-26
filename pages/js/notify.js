@@ -1,37 +1,39 @@
-
-// Store references to our container and overlay
+// Store references to our container
 let notificationContainer = null;
 
-// Function to create and set up the initial container 
+// Function to create and set up the initial container
 function setupNotificationSystem() {
-    // Check if container already exists
+    // Check if the container already exists
     if (notificationContainer) return;
 
-    // Create the container that will hold our notifications
+    // Create the container to hold notifications
     notificationContainer = document.createElement('div');
     notificationContainer.id = 'notification-container';
     document.body.appendChild(notificationContainer);
 }
 
-// Function to get the appropriate icon based on notification type fromsession
+// Function to get the appropriate icon based on notification type
 function getNotificationIcon(type) {
-    if (type === 'success') {
-        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
-    } else {
-        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    switch(type) {
+        case 'success':
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+        case 'error':
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+        case 'warning':
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+        case 'info':
+        default:
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
     }
 }
 
 // Function to create a new notification element
 function createNotificationElement(message, type) {
-    // Create the main notification div
-    let notification = document.createElement('div');
-    notification.className = 'notification-popup';
-    
-    // Get the icon for this notification type
-    let icon = getNotificationIcon(type);
-    
-    // Set the HTML content foro showing the notification in toast
+    const notification = document.createElement('div');
+    notification.className = `notification-popup ${type}`;
+
+    const icon = getNotificationIcon(type);
+
     notification.innerHTML = `
         <div class="notification-content">
             <div class="notification-icon ${type}">${icon}</div>
@@ -45,75 +47,62 @@ function createNotificationElement(message, type) {
         </div>
     `;
 
-    // on hover listeners to pause/resume the auto-close timer
-    notification.addEventListener('mouseenter', function() {
-        let timeoutId = notification.getAttribute('data-timeout');
+    notification.addEventListener('mouseenter', () => {
+        const timeoutId = notification.getAttribute('data-timeout');
         if (timeoutId) {
             clearTimeout(parseInt(timeoutId));
         }
     });
 
-    notification.addEventListener('mouseleave', function() {
-        let timeoutId = setTimeout(function() {
+    notification.addEventListener('mouseleave', () => {
+        const timeoutId = setTimeout(() => {
             closeNotification(notification);
-        }, 2000); // 2 second delay after mouse leave
+        }, 2000);
         notification.setAttribute('data-timeout', timeoutId);
     });
-    
+
     return notification;
 }
 
 // Function to close/remove a notification
 function closeNotification(notification) {
     if (!notification) return;
-    
-    // Remove the show class to trigger hiding animation
     notification.classList.remove('show');
     notification.classList.add('hiding');
-    
-    // Clear the timeout that was set for auto-removal
-    let timeoutId = notification.getAttribute('data-timeout');
+
+    const timeoutId = notification.getAttribute('data-timeout');
     if (timeoutId) {
         clearTimeout(parseInt(timeoutId));
     }
-    
-    // Remove the notification after animation
-    setTimeout(function() {
+
+    setTimeout(() => {
         notification.remove();
     }, 300);
 }
 
 // Main function to show a notification
-function showAlert(message, type) { //handle success or failure with message
-    // set up notification system (i.e. container)
+function showAlert(message, type = 'success') {
     if (!notificationContainer) {
         setupNotificationSystem();
     }
 
-    // Create the notification
-    let notification = createNotificationElement(message, type);
+    const validTypes = ['success', 'error', 'warning', 'info']; //valid types accepted by the system
+    type = validTypes.includes(type) ? type : 'info'; //if not valid type, directly throw to info type
     
-    // Add it to the container
+    const notification = createNotificationElement(message, type);
     notificationContainer.appendChild(notification);
-    
-    // Show the notification with animation
-    setTimeout(function() {
+
+    setTimeout(() => {
         notification.classList.add('show');
     }, 10);
-    
-    // Set up auto-removal
-    let timeoutId = setTimeout(function() {
+
+    const timeoutId = setTimeout(() => {
         closeNotification(notification);
-    }, 4000); // 4 seconds default display time
-    
-    // Store the timeout ID on the element
+    }, 4000);
     notification.setAttribute('data-timeout', timeoutId);
 }
 
-// Initialize the system when the script loads
-setupNotificationSystem();
-
-// Also set up when DOM is fully loaded (as a backup)
-document.addEventListener('DOMContentLoaded', function() {
+// Set up the notification system when the DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
     setupNotificationSystem();
 });
