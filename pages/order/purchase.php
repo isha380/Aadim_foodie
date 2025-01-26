@@ -3,6 +3,16 @@ session_start();
 include "../database/connection.php";
 
 
+/**
+ * TODO: Implementation
+ * once the items are purchased,
+ * destroy the session cart only not all sessions.
+ * 
+ * Store in the order history table with order information filtered by users id or roll number 
+ * create a separate page for every users who can see the order history
+ */
+
+
 // Check if the request is a POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
