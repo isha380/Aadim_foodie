@@ -27,7 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login-id-value'], $_P
         if (password_verify($std_pw, $user['Password'])) {
             $_SESSION['roll'] = $std_roll; // Store roll number in session
             $_SESSION['name'] = $user['Name']; 
-            header("Location: Newmenu.php");   // Redirect to menu on success
+
+
+            header("Location: menu_page.php");   // Redirect to menu on success
+
             exit();
         } else {
             $error = "Invalid username or password."; // Wrong password

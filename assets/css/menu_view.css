@@ -1,0 +1,59 @@
+body#menu-view {
+  background-image: url(../image/web_page/view-menu.png);
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 1px;
+}
+.menu-container-headline.view {
+  margin: 15px 0px 2px 405px;
+}
+
+/* Ensure the main container doesn't block overflow */
+.menu-container {
+    overflow: visible; /* Allow content inside to scroll */
+  }
+  
+  /* Configure the dish slide container for vertical scrolling */
+  .dish-slide-container.menu.view {
+    display: grid; /* Use grid layout for items */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* At least 3 items in a row */
+    max-height: 100vh; /* Set container height to 80% of the viewport */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 0px 267px 5px 90px !important; /* Optional padding for aesthetics */
+    scroll-behavior: smooth; /* Smooth scrolling */
+  }
+  
+  /* Scrollbar customization */
+  .dish-slide-container.menu.view::-webkit-scrollbar {
+    width: 10px; /* Adjust scrollbar width */
+  }
+  
+  .dish-slide-container.menu.view::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Light background */
+    border-radius: 10px;
+  }
+  
+  .dish-slide-container.menu.view::-webkit-scrollbar-thumb {
+    background: #888; /* Darker scrollbar thumb */
+    border-radius: 10px;
+  }
+  
+  .dish-slide-container.menu.view::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darker hover color */
+  }
+  
+  /* Dish content wrapper */
+  .dish-content-wrapper.menu {
+    height: 400px; /* Adjust for card size */
+    width: 100%; /* Fit within container */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+      rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+      rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    display: flex;
+    flex-direction: column; /* Stack content inside the card vertically */
+    justify-content: space-between; /* Evenly space content */
+  }
+  .add-to-cart-button{
+    margin-bottom: 10px;
+  }

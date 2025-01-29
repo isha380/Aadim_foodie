@@ -140,33 +140,37 @@ $userName = $_SESSION['name'];
                                 </div>
                                 <div class="dish-quantity-wrapper">
                                     <button class="btn-quantity decrement" type="button" onclick="decrementQuantity('dish-quantity-<?php echo $row['Id']; ?>')">-</button>
-                                    <div class="dish-number" id="dish-quantity-<?php echo $row['Id']; ?>">
-                                        <input type="hidden" id="dish-quantity-<?php echo $row['Id']; ?>" value="">  1</div>
+
+                                    <div class="dish-number" id="dish-quantity-<?php echo $row['Id']; ?>">1</div>
+
                                     <button class="btn-quantity increment" type="button" onclick="incrementQuantity('dish-quantity-<?php echo $row['Id']; ?>')">+</button>
                                 </div>
 
                                 <div class="add-to-cart-button">
-                                    <?php if ($row['Status'] == '0'): ?>
-                                        <!-- Dish Unavailable -->
-                                        <button class="btn cart-btn" type="button" onclick="showAlert('This dish is not available for now','error')">
-                                            <span class="cart-btn-text">Add to cart</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
-                                            </svg>
-                                        </button>
-                                    <?php else: ?>
-                                        <!-- Dish Available -->
-                                        <button class="btn cart-btn" type="submit" name="add_to_cart">
-                                            <span class="cart-btn-text">Add to cart</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
-                                            </svg>
-                                        </button>
-                                    <?php endif; ?>
-                                    <input type="hidden" name="Item_Name" value="<?php echo $row['Name']; ?>" />
-                                    <input type="hidden" name="image" value="<?php echo $row['Image']; ?>" />
-                                    <input type="hidden" name="Price" value="<?php echo $row['Price']; ?>" />
-                                    <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="quantity" value="1">
+
+                                
+
+
+                                    <?php
+                                    if ($row['Status'] == '0') {
+                                        echo  '<button class="btn cart-btn" onclick="alert(\'This dish is not available for now\')">
+                                     <span class="cart-btn-text">Add to cart</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
+                                    </svg></button>';
+                                    } else {
+                                        echo  '<button class="btn cart-btn" type="submit" name="add_to_cart">
+                                     <span class="cart-btn-text">Add to cart</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
+                                    </svg></button>';
+                                    }
+
+                                    ?>
+                                    <input type="hidden" name="order_name" value="<?php $row['Name'] ?>">
+                                    <input type="hidden" name="order_price" value="<?php $row['Price'] ?>">
+                                    <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="quantity" value="<?php $row['Price'] ?>">
+
                                 </div>
                             </div>
                         </div>
@@ -196,10 +200,19 @@ $userName = $_SESSION['name'];
 
     <section id="food-order-wrapper">
         <div class="reg-wrapper order">
-            <div class="reg-headline">
+
+   <div class="reg-headline order">
+                <?php
+                $count = 0;
+                if (isset($_SESSION['cart'])) {
+                    $count = count($_SESSION['cart']);
+                }
+
+                ?>
                 <div class="order_title">
-                    <h2 style="font-size: 24px; margin: 0;">My Orders</h2>
-                    <div class="order_count" style="font-size: 20px; color: #333;"><?php echo $total_items; ?></div>
+                    <h2>My Orders</h2>
+                    <div class="order_count"><?php echo $count; ?></div>
+
                 </div>
             </div>
 
@@ -214,65 +227,52 @@ $userName = $_SESSION['name'];
                             <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+
+         
+
+                    <!-- <tbody>
+            
                         <?php
+                        print_r($_SESSION['cart']);
                         $total = 0;
-                        $counter = $offset + 1; // To keep S.No accurate for pagination
-                        if (!empty($cart_items)) {
-                            foreach ($cart_items as $key => $value) {
-                                $value = array_merge([
-                                    'order_name' => '',
-                                    'order_price' => 0,
-                                    'quantity' => 0,
-                                    'image' => '',
-                                    'Item_Name' => '',
-                                    'Price' => 0,
-                                    'Quantity' => 0
-                                ], $value);
+                        $counter = 0;
+                        if (isset($_SESSION['cart'])) {
 
-                                $price = floatval($value['Price'] ?? $value['order_price']);
-                                $quantity = intval($value['Quantity'] ?? $value['quantity']);
-                                $itemTotal = $price * $quantity;
-                                $total += $itemTotal;
-
-                                $itemName = !empty($value['Item_Name']) ? $value['Item_Name'] : $value['order_name'];
-                                $itemName = htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8');
-                        ?>
-                                <tr>
-                                    <td style="text-align: center;"><?php echo $counter; ?></td>
-                                    <td style="text-align: left; padding: 10px;">
-                                        <?php if (!empty($value['image'])): ?>
-                                            <img src="../assets/image/menu/<?php echo htmlspecialchars($value['image']); ?>" alt="<?php echo $itemName; ?>" class="cart-item-image" style="width: 30px; height: 30px; margin-right: 10px;">
-                                        <?php endif; ?>
-                                        <?php echo $itemName; ?>
-                                    </td>
-                                    <td style="text-align: center;"><?php echo $quantity; ?></td>
-                                    <td style="text-align: right;">Rs. <?php echo number_format($price, 2); ?></td>
-                                    <td style="text-align: center;">
-                                        <form method="post" action="./cart/cartManage.php">
-                                            <input type="hidden" name="item_name" value="<?php echo $value['Item_Name']; ?>">
-                                            <input type="hidden" name="item_index" value="<?php echo $key; ?>">
-                                            <button type="submit" class="remove-btn" name="remove_item" style="background-color: #ff4c4c; color: white; border: none; padding: 5px 10px; cursor: pointer; font-size: 14px; border-radius: 5px;">Remove</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <?php
-                                $counter++;
-                            }
-                        } else {
-                            ?>
+                            foreach ($_SESSION['cart'] as $key => $value) {
+                                echo ($value);
+                                $total = $total + $value['order_price'];
+                                echo "
                             <tr>
-                                <td colspan="5" style="text-align: center; padding: 20px; font-size: 18px; color: #999;">Your cart is empty</td>
+                             <td> ++$counter </td>
+                             <td>$value[order_name]</td>
+                    
+                             <td>$value[quantity]</td>
+                             <td>$value[order_price]</td>
+                             <td>
+                                <form action='managecart.php' method='POST'>
+                                    <button name='remove_dish'>Remove</button>
+                                    <input type='hidden' name='order_name' value='$value[order_name]'>
+                                </form>
+                             </td>
                             </tr>
-                        <?php } ?>
-                        <tr class="cart-total">
-                            <td colspan="3" rowspan="2" style="padding: 15px; text-align: right;">Total</td>
-                            <td colspan="2" class="total-amount" style="font-size: 24px; font-weight: bold; color: #e74c3c; text-align: right; padding: 15px;">
-                                Rs. <?php echo number_format($total, 2); ?>
-                            </td>
-                        </tr>
-                    </tbody>
+                            ";
+                            }
+                        }
+                        ?>
+                      
+
+                    </tbody> -->
                 </table>
+                <div class="order-total-wrapper">
+                    <div class="total-container">
+                        <h3>Total:</h3>
+                        <h5><?php echo  $total ?></h5>
+                        <form>
+                            <button>Purchase</button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Pagination -->
@@ -296,6 +296,13 @@ $userName = $_SESSION['name'];
         console.log("showAlert function:", typeof showAlert);
     </script> -->
     <script src="./js/slide.js"> </script>
+
+
+
+    <script src="./js/slide.js">
+
+    </script>
+
 
     <script>
         // Update button state for decrement button

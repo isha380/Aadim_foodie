@@ -1,0 +1,158 @@
+<?php
+session_start();
+
+include "../pages/database/connection.php";
+include "./cart/managecart.php";
+
+if (!isset($_SESSION['roll']) || !isset($_SESSION['name'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$userName = $_SESSION['name'];
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRACTICEMENU</title>
+    <link rel="stylesheet" href="../assets/css/component.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/order_table.css">
+</head>
+
+<body class="menu-body">
+    <!-- Menu Info Section -->
+    <section id="menu-info-wrapper">
+        <div class="menu-headline">
+            <div class="navBar-banner-headings menu">
+                <div class="navbar-img menu">
+                    <img src="../assets/image/icon/final_dark logo.png" alt="Logo">
+                </div>
+                <div class="navbar-txt menu">
+                    <ul>
+                        <li><a href="../pages/index.php">Home</a></li>
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#menu-food-info-wrapper">View Menu</a></li>
+                        <li><a href="logout.php">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-banner">
+            <div class="menu-profile-name">
+                <h1>Welcome, <?php echo htmlspecialchars($userName); ?></h1>
+            </div>
+            <div class="menu-info">
+                <span class="menu-info-txt">Hungry for something amazing? <br>Let us bring the feast to you.<br>" Order your favorites now! "</span>
+                <button class="btn reg-btn menu">
+                    <a href="#menu-food-info-wrapper">ORDER FOOD</a>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Food Info Section -->
+    <section id="menu-food-info-wrapper">
+        <div class="menu-container-headline">
+            <span class="menu-container-txt">OUR CULINARY DELIGHTS</span>
+        </div>
+
+        <div class="menu-container">
+            <div class="dish-slide-container menu">
+                <?php
+                $res = mysqli_query($conn, "SELECT * FROM menu_items");
+                while ($row = mysqli_fetch_assoc($res)) {
+                ?>
+                    <form method="POST" action="./cart/managecart.php">
+                        <div class="dish-content-wrapper menu">
+                            <div class="dish-image">
+                                <img src="../assets/image/menu/<?php echo htmlspecialchars($row['Image']); ?>" alt="Dish Image">
+                            </div>
+                            <div class="dish-info">
+                                <div class="dish-name">
+                                    <button class="btn dish" type="button"><?php echo htmlspecialchars($row['Name']); ?></button>
+                                </div>
+                                <div class="dish-price">
+                                    <span class="slider-dish-price">Per Plate: <?php echo htmlspecialchars($row['Price']); ?></span>
+                                </div>
+                                <div class="dish-status-wrapper">
+                                    <span class="dish-status-text">Status:
+                                        <button class="dish-status-label" id="dish-status"
+                                            <?php if ($row['Status'] == '1') {
+                                                echo 'style="background-color: #6EC531; color: #FEB737;"';
+                                            } ?>>
+                                            <?php echo ($row['Status'] == '1') ? 'Available' : 'Unavailable'; ?>
+                                        </button>
+                                    </span>
+                                </div>
+                                <div class="dish-quantity-wrapper">
+                                    <button class="btn-quantity decrement" type="button"
+                                        onclick="decrementQuantity('dish-quantity-<?php echo $row['Id']; ?>', 'order-dish-quantity-<?php echo $row['Id']; ?>')">-</button>
+                                    <div class="dish-number" id="dish-quantity-<?php echo $row['Id']; ?>">1</div>
+                                    <button class="btn-quantity increment" type="button"
+                                        onclick="incrementQuantity('dish-quantity-<?php echo $row['Id']; ?>', 'order-dish-quantity-<?php echo $row['Id']; ?>')">+</button>
+
+                                    <input type="hidden" id="order-dish-quantity-<?php echo $row['Id']; ?>" name="quantity" value="1">
+                                </div>
+
+                                <div class="add-to-cart-button">
+                                    <?php if ($row['Status'] == '0') { ?>
+                                        <button class="btn cart-btn" type="button" onclick="alert('This dish is not available for now')">
+                                            <span class="cart-btn-text">Add to cart</span>
+                                        </button>
+                                    <?php } else { ?>
+                                        <button class="btn cart-btn" type="submit" name="add_to_cart">
+                                            <span class="cart-btn-text">Add to cart</span>
+                                        </button>
+                                    <?php } ?>
+                                    <input type="hidden" name="order_name" value="<?php echo htmlspecialchars($row['Name']); ?>">
+                                    <input type="hidden" name="order_price" value="<?php echo htmlspecialchars($row['Price']); ?>">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                <?php } ?>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function incrementQuantity(visibleId, hiddenId, maxLimit = 10) {
+            const quantityElem = document.getElementById(visibleId);
+            const hiddenInput = document.getElementById(hiddenId);
+            let quantity = parseInt(quantityElem.textContent);
+
+            if (quantity < maxLimit) {
+                quantity += 1;
+                quantityElem.textContent = quantity;
+                hiddenInput.value = quantity;
+            } else {
+                alert(`Maximum quantity limit of ${maxLimit} reached`);
+            }
+        }
+
+        function decrementQuantity(visibleId, hiddenId, minLimit = 1) {
+            const quantityElem = document.getElementById(visibleId);
+            const hiddenInput = document.getElementById(hiddenId);
+            let quantity = parseInt(quantityElem.textContent);
+
+            if (quantity > minLimit) {
+                quantity -= 1;
+                quantityElem.textContent = quantity;
+                hiddenInput.value = quantity;
+            } else {
+                alert(`Minimum quantity limit of ${minLimit} reached`);
+            }
+        }
+    </script>
+</body>
+
+</html>
