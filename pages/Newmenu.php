@@ -56,12 +56,12 @@ $userName = $_SESSION['name'];
             </div>
 
         </div>
-        <script src="./js/notification.js"></script>
+        <script src="./js/notification.js"></script> 
         <?php
-        if (isset($_SESSION['msg'])) {
-            echo "<script>showAlert('" . htmlspecialchars($_SESSION['msg']) . "');</script>";
-            unset($_SESSION['msg']);
-        }
+            if (isset($_SESSION['msg'])) {
+                echo "<script>showAlert('" . htmlspecialchars($_SESSION['msg']) . "');</script>";
+                unset($_SESSION['msg']);
+            }
         ?>
         <div class="menu-banner">
             <div class="menu-profile-name">
@@ -102,9 +102,9 @@ $userName = $_SESSION['name'];
 
             <div class="dish-slide-container menu">
                 <?php
-                $res = mysqli_query($conn, "SELECT * FROM menu_items");
-                // Loop through each item and display it
-                while ($row = mysqli_fetch_assoc($res)) {
+                    $res = mysqli_query($conn, "SELECT * FROM menu_items");
+                    // Loop through each item and display it
+                    while ($row = mysqli_fetch_assoc($res)) {
 
                 ?>
                     <form method="POST" action="./cart/cartManage.php">
@@ -117,7 +117,7 @@ $userName = $_SESSION['name'];
                                     <button class="btn dish"><?php echo htmlspecialchars($row['Name']); ?></button>
                                 </div>
                                 <div class="dish-price">
-                                    <!-- <--! <?php var_dump($row); ?> -->
+                                <!-- <--! <?php var_dump($row);?> -->
                                     <span class="slider-dish-price">Per Plate:
                                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                                             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3m0 0c6.667 0 6.667-10 0-10" />
@@ -139,10 +139,9 @@ $userName = $_SESSION['name'];
                                     </span>
                                 </div>
                                 <div class="dish-quantity-wrapper">
-                                    <button class="btn-quantity decrement" type="button" onclick="decrementQuantity('dish-quantity-<?php echo $row['Id']; ?>')">-</button>
-                                    <div class="dish-number" id="dish-quantity-<?php echo $row['Id']; ?>">
-                                        <input type="hidden" id="dish-quantity-<?php echo $row['Id']; ?>" value="">  1</div>
-                                    <button class="btn-quantity increment" type="button" onclick="incrementQuantity('dish-quantity-<?php echo $row['Id']; ?>')">+</button>
+                                    <button class="btn-quantity decrement"  type="button" onclick="decrementQuantity('dish-quantity-<?php echo $row['Id']; ?>')">-</button>
+                                    <div class="dish-number" id="dish-quantity-<?php echo $row['Id']; ?>">1</div>
+                                    <button class="btn-quantity increment" type="button"  onclick="incrementQuantity('dish-quantity-<?php echo $row['Id']; ?>')">+</button>
                                 </div>
 
                                 <div class="add-to-cart-button">
@@ -154,25 +153,25 @@ $userName = $_SESSION['name'];
                                                 <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
                                             </svg>
                                         </button>
-                                    <?php else: ?>
-                                        <!-- Dish Available -->
-                                        <button class="btn cart-btn" type="submit" name="add_to_cart">
-                                            <span class="cart-btn-text">Add to cart</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
-                                            </svg>
-                                        </button>
-                                    <?php endif; ?>
-                                    <input type="hidden" name="Item_Name" value="<?php echo $row['Name']; ?>" />
-                                    <input type="hidden" name="image" value="<?php echo $row['Image']; ?>" />
-                                    <input type="hidden" name="Price" value="<?php echo $row['Price']; ?>" />
-                                    <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="quantity" value="1">
+                                            <?php else: ?>
+                                                <!-- Dish Available -->
+                                                <button class="btn cart-btn" type="submit" name="add_to_cart">
+                                                    <span class="cart-btn-text">Add to cart</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                        <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
+                                                    </svg>
+                                                </button>
+                                            <?php endif; ?>
+                                            <input type="hidden" name="Item_Name" value="<?php echo $row['Name']; ?>" />
+                                            <input type="hidden" name="image" value="<?php echo $row['Image']; ?>" />
+                                            <input type="hidden" name="Price" value="<?php echo $row['Price']; ?>" />
+                                            <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="quantity" value="1">
                                 </div>
                             </div>
                         </div>
                     </form>
                 <?php
-                }
+                    }
                 ?>
             </div>
         </div>
@@ -181,17 +180,17 @@ $userName = $_SESSION['name'];
     <!--------------------------------------menu food order info section------------------------->
 
     <?php
-    // Pagination setup
-    $items_per_page = 5; // Items per page 
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Get current page from URL
-    $offset = ($page - 1) * $items_per_page;
+        // Pagination setup
+        $items_per_page = 5; // Items per page 
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Get current page from URL
+        $offset = ($page - 1) * $items_per_page;
 
-    // Fetch cart items from session
-    $cart_items = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
-    $total_items = count($cart_items);
-    $cart_items = array_slice($cart_items, $offset, $items_per_page); // Slice the array to paginate
+        // Fetch cart items from session
+        $cart_items = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+        $total_items = count($cart_items);
+        $cart_items = array_slice($cart_items, $offset, $items_per_page); // Slice the array to paginate
 
-    $total_pages = ceil($total_items / $items_per_page);
+        $total_pages = ceil($total_items / $items_per_page);
     ?>
 
     <section id="food-order-wrapper">
@@ -215,8 +214,8 @@ $userName = $_SESSION['name'];
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        $total = 0;
+                        <?php  
+                        $total = 0; 
                         $counter = $offset + 1; // To keep S.No accurate for pagination
                         if (!empty($cart_items)) {
                             foreach ($cart_items as $key => $value) {
@@ -237,7 +236,7 @@ $userName = $_SESSION['name'];
 
                                 $itemName = !empty($value['Item_Name']) ? $value['Item_Name'] : $value['order_name'];
                                 $itemName = htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8');
-                        ?>
+                                ?>
                                 <tr>
                                     <td style="text-align: center;"><?php echo $counter; ?></td>
                                     <td style="text-align: left; padding: 10px;">
@@ -257,7 +256,7 @@ $userName = $_SESSION['name'];
                                     </td>
                                 </tr>
                             <?php
-                                $counter++;
+                            $counter++;
                             }
                         } else {
                             ?>
@@ -296,7 +295,7 @@ $userName = $_SESSION['name'];
         console.log("showAlert function:", typeof showAlert);
     </script> -->
     <script src="./js/slide.js"> </script>
-
+    
     <script>
         // Update button state for decrement button
         function updateButtonState(id, minLimit = 1) {
@@ -331,7 +330,7 @@ $userName = $_SESSION['name'];
             }
         }
     </script>
-
+    
 </body>
 
 </html>

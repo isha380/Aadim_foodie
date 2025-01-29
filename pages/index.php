@@ -19,11 +19,11 @@
             </div>
             <div class="navBar-banner-headings">
                 <ul>
-                    <li><a href="login.php">Home</a></li>
-                    <li><a href="#">About us</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a  class="active"href="login.php">Home</a></li>
+                    <li><a class="active" href="#">About us</a></li>
+                    <li><a  class="active" href="#">Contact</a></li>
                     <li><a class="active" href="login.php">view menu</a></li>
-                    <li><a href="#">login/signUp</a></li>
+                    <li><a href="login.php">login/signUp</a></li>
 
                 </ul>
             </div>
