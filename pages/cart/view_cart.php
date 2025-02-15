@@ -52,7 +52,7 @@ include "./managecart.php";
 
         /* Cart Content Styling Enhancements */
         .order-wrapper {
-            background-color: #fff;
+            
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             padding: 20px;
@@ -106,10 +106,12 @@ include "./managecart.php";
             align-items: center;
             margin-top: 20px;
             padding: 15px;
-            background-color: #f9f9f9;
+            background-color: #FFEBAE;
             border-radius: 8px;
         }
-
+.my_order thead#order_table_head{
+    background-color: #FFEBAE !important;
+}
         .total-container {
             display: flex;
             align-items: center;
@@ -198,7 +200,7 @@ include "./managecart.php";
             <?php if (!$isCartEmpty): ?>
             <div class="order-wrapper">
                 <table class="my_order">
-                    <thead>
+                    <thead id="order_table_head">
                         <tr>
                             <th>S.No</th>
                             <th>Dish Name</th>

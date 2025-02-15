@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 
 include "../pages/database/connection.php";
 include "./cart/managecart.php";
@@ -19,7 +19,7 @@ $userName = $_SESSION['name'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRACTICEMENU</title>
+    <title>MENU</title>
     <link rel="stylesheet" href="../assets/css/component.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -156,9 +156,6 @@ $userName = $_SESSION['name'];
                                     <?php } ?>
 
                                     <!-- Hidden Inputs for Order Details -->
-                                    
-                                    <!-- <input type="hidden" name="order_name" value=" <?echo htmlspecialchars($row['Name']); ?>">
-                                    <input type="hidden" name="order_price" value="<? echo htmlspecialchars($row['Price']); ?>"> -->
                                     <input type="hidden" name="image" value="../assets/image/menu/<?php echo htmlspecialchars($row['Image']); ?>">
                                     <input type="hidden" name="order_name" value="<?php echo htmlspecialchars($row['Name']); ?>">
                                     <input type="hidden" name="order_price" value="<?php echo htmlspecialchars($row['Price']); ?>">
@@ -175,47 +172,6 @@ $userName = $_SESSION['name'];
 
     <script src="../pages/js/slide.js"></script>
     <script>
-        // Increment Quantity
-        // function incrementQuantity(displayId) {
-        //     const quantityElement = document.getElementById(displayId);
-        //     const quantityInput = document.getElementById('order-' + displayId);
-        //     let quantity = parseInt(quantityElement.textContent);
-        //     quantity++;
-        //     quantityElement.textContent = quantity;
-        //     quantityInput.value = quantity; // Sync hidden input
-        // }
-
-        // Decrement Quantity
-        // function decrementQuantity(displayId) {
-        //     const quantityElement = document.getElementById(displayId);
-        //     const quantityInput = document.getElementById('order-' + displayId);
-        //     let quantity = parseInt(quantityElement.textContent);
-        //     if (quantity > 1) {
-        //         quantity--;
-        //         quantityElement.textContent = quantity;
-        //         quantityInput.value = quantity; // Sync hidden input
-        //     }
-        // }
-
-        // function incrementQuantity(displayId) {
-        //     const quantityElement = document.getElementById(displayId);
-        //     const quantityInput = document.querySelector(`input#order-quantity-${displayId.split('-').pop()}`);
-        //     let quantity = parseInt(quantityElement.textContent);
-        //     quantity++;
-        //     quantityElement.textContent = quantity;
-        //     quantityInput.value = quantity; // Sync hidden input
-        // }
-
-        // function decrementQuantity(displayId) {
-        //     const quantityElement = document.getElementById(displayId);
-        //     const quantityInput = document.querySelector(`input#order-quantity-${displayId.split('-').pop()}`);
-        //     let quantity = parseInt(quantityElement.textContent);
-        //     if (quantity > 1) {
-        //         quantity--;
-        //         quantityElement.textContent = quantity;
-        //         quantityInput.value = quantity; // Sync hidden input
-        //     }
-        // }
         function incrementQuantity(id, maxLimit = 10) {
             const quantityElem = document.getElementById(id);
             const quantityInput = document.getElementById('order-quantity-' + id.split('-').pop());

@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 include "../pages/database/connection.php";
 include "./cart/managecart.php";
 
