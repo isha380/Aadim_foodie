@@ -1,7 +1,38 @@
 <?php
-include "./managecart.php";
-// session_destroy();
-?>
+include "../pages/database/connection.php";
+session_start();
+
+// Check if the user is logged in and the user_id is set in session
+if (!isset($_SESSION['roll'])) {
+    // Redirect to login page if user is not logged in
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['roll']; // Ensure user_id is stored in session
+
+// Get today's orders
+$today = date("Y-m-d");
+$query = "SELECT * FROM order_food WHERE Student_Id = ? AND DATE(Order_Date) = ?";
+
+// Check if the connection is successful before preparing the query
+if ($stmt = $conn->prepare($query)) {
+    $stmt->bind_param("is", $user_id, $today);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $orders = [];
+    while ($row = $result->fetch_assoc()) {
+        $orders[] = $row;
+    }
+    $stmt->close();
+} else {
+    // Handle error if the query preparation fails
+    die("Database query failed: " . $conn->error);
+}
+
+?>  
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,11 +41,11 @@ include "./managecart.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Cart</title>
-    <link rel="stylesheet" href="../../assets/css/component.css">
-    <link rel="stylesheet" href="../../assets/css/responsive.css">
-    <link rel="stylesheet" href="../../assets/css/style.css">
-    <link rel="stylesheet" href="../../assets/css/order_table.css">
-    <link rel="stylesheet" href="../../assets/css/notification.css">
+    <link rel="stylesheet" href="../assets/css/component.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/order_table.css">
+    <link rel="stylesheet" href="../assets/css/notification.css">
     <script src="../js/notify.js"></script>
     <style>
         /* Empty Cart Styling */
@@ -52,9 +83,8 @@ include "./managecart.php";
 
         /* Cart Content Styling Enhancements */
         .order-wrapper {
-            
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
 
@@ -68,7 +98,8 @@ include "./managecart.php";
             background-color: #f4f4f4;
         }
 
-        .my_order th, .my_order td {
+        .my_order th,
+        .my_order td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
@@ -109,9 +140,11 @@ include "./managecart.php";
             background-color: #FFEBAE;
             border-radius: 8px;
         }
-.my_order thead#order_table_head{
-    background-color: #FFEBAE !important;
-}
+
+        .my_order thead#order_table_head {
+            background-color: #FFEBAE !important;
+        }
+
         .total-container {
             display: flex;
             align-items: center;
@@ -129,7 +162,8 @@ include "./managecart.php";
             font-size: 18px;
         }
 
-        .total-container button, .back-btn button {
+        .total-container button,
+        .back-btn button {
             background-color: #543787;
             color: white;
             border: none;
@@ -139,7 +173,8 @@ include "./managecart.php";
             transition: background-color 0.3s ease;
         }
 
-        .total-container button:hover, .back-btn button:hover {
+        .total-container button:hover,
+        .back-btn button:hover {
             background-color: #6a4ba3;
         }
     </style>
@@ -172,7 +207,7 @@ include "./managecart.php";
         <div class="menu-headline">
             <div class="navBar-banner-headings menu">
                 <div class="navbar-img menu">
-                    <img src="../../assets/image/icon/final_dark logo.png" alt="Logo">
+                    <img src="../assets/image/icon/final_dark logo.png" alt="Logo">
                 </div>
                 <div class="navbar-txt menu">
                     <ul>
@@ -197,77 +232,69 @@ include "./managecart.php";
                 </div>
             </div>
 
-            <?php if (!$isCartEmpty): ?>
+            <?php if (!empty($orders)): ?>
             <div class="order-wrapper">
                 <table class="my_order">
-                    <thead id="order_table_head">
+                    <thead>
                         <tr>
                             <th>S.No</th>
                             <th>Dish Name</th>
                             <th>Quantity</th>
                             <th>Price</th>
-                            <th>Update</th>
-                            <th>Remove</th>
+                            <th>Order Time</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $total = 0;
-                        foreach ($_SESSION['cart'] as $key => $item) {
-                            $orderName = htmlspecialchars($item['order_name'] ?? "N/A");
-                            $orderPrice = floatval($item['order_price'] ?? 0);
-                            $orderQuantity = intval($item['order_quantity'] ?? 1);
-                            $itemTotalPrice = $orderPrice * $orderQuantity;
-                            $total += $itemTotalPrice;
+                        $count = 1;
+                        foreach ($orders as $order):
+                            $order_id = $order['Cart_Id'];
+                            $order_time = strtotime($order['Order_Date']);
+                            $current_time = time();
+                            $time_difference = ($current_time - $order_time) / 60; // Convert seconds to minutes
+
+                            $cancelable = $time_difference < 16;
                         ?>
                         <tr>
-                            <form method="POST" action="managecart.php">
-                                <td><?php echo $key + 1; ?></td>
-                                <td>
-                                    <input type="hidden" name="order_name" value="<?php echo $orderName; ?>">
-                                    <?php echo $orderName; ?>
-                                </td>
-                                <td>
-                                    <input type="number" name="order_quantity" value="<?php echo $orderQuantity; ?>" min="1">
-                                </td>
-                                <td>
-                                    <input type="hidden" name="order_price" value="<?php echo number_format($itemTotalPrice, 2); ?>" readonly>
-                                    <h5><?php echo number_format($itemTotalPrice, 2); ?></h5>
-                                </td>
-                                <td>
-                                    <button type="submit" name="update_item">Update</button>
-                                </td>
-                                <td>
-                                    <button type="submit" name="remove_item">Remove</button>
-                                </td>
-                            </form>
+                            <td><?php echo $count++; ?></td>
+                            <td><?php echo htmlspecialchars($order['Dish_name']); ?></td>
+                            <td><?php echo $order['Quantity']; ?></td>
+                            <td>Rs. <?php echo number_format($order['Price'], 2); ?></td>
+                            <td><?php echo date("h:i A", $order_time); ?></td>
+                            <td>
+                                <?php if ($cancelable): ?>
+                                    <form method="POST" action="../pages/order/cancel_by_user.php">
+                                        <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                                        <button type="submit" style="color: red;">Cancel</button>
+                                    </form>
+                                <?php else: ?>
+                                    <span style="color: grey;">Cannot Cancel</span>
+                                <?php endif; ?>
+                            </td>
                         </tr>
-                        <?php } ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
-
-                <!-- Order Total Section -->
-                <div class="order-total-wrapper">
-                    <div class="total-container">
-                        <h3>Total:</h3>
-                        <h5>Rs.<?php echo number_format($total, 2); ?></h5>
-                        <form method="POST" action="../order/purchase.php">
-                            <button type="submit">Purchase</button>
-                        </form>
-                    </div>
-                    <div class="back-btn">
-                        <button onclick="window.location.href='../../pages/menu_page.php';">Back</button>
-                        
-                       
-                    </div>
-                </div>
             </div>
             <?php else: ?>
-            <div class="empty-cart-message">
-                <p>Your cart is currently empty. Start adding items from the menu!</p>
-                <button onclick="window.location.href='../../pages/menu_page.php';">Go to Menu</button>
-            </div>
+                <p>No orders found for today.</p>
             <?php endif; ?>
+
+            <!-- Order Total Section -->
+            <div class="order-total-wrapper">
+                <div class="total-container">
+                    <h3>Total:</h3>
+                    <h5>Rs.<?php echo number_format($total, 2); ?></h5>
+                    <form method="POST" action="../order/purchase.php">
+                        <button type="submit">Purchase</button>
+                    </form>
+                </div>
+                <div class="back-btn">
+                    <button onclick="window.location.href='../../pages/menu_page.php';">Back</button>
+                    <button onclick="return confirm('Do you want to cancel order?')" style="color: red;">Cancel</button>
+                </div>
+            </div>
         </div>
     </section>
 </body>

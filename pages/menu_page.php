@@ -79,7 +79,9 @@ $userName = $_SESSION['name'];
             <span class="menu-container-txt">OUR CULINARY DELIGHTS</span>
            
         </div>
-        <li><a href="../pages/cart/view_cart.php"><button>CART</button></a></li>
+         <a href="../pages/cart/view_cart.php"><button>CART</button></a>     
+         <a href="../pages/order_details.php"><button>ORDER DETAILS</button></a>     
+         <a href="../pages/cancel.php"><button>MY ORDER </button></a>     
 
         <div class="menu-container">
             <button class="arrow menu pre">

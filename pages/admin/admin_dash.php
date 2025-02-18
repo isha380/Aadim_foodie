@@ -50,9 +50,11 @@ $adminName = $_SESSION['admin'];
 
                     <div class="dash-panel-wrapper status">
                         <div class="dash-status-txt">
-                            <span class="dash dropdown ">Status</span>
-
-
+                        <span class="dash dropdown" onclick="dropdown_show(this)">Orders</span>
+                        <div class="dropdown-content" style="display: none;">
+                            <a href="../admin/status_view.php">Status</a>
+                            <a href="#">Add User</a>
+                            </div>
                         </div>
                     </div>
                     <div class="dash-panel-wrapper users">

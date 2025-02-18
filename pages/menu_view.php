@@ -38,7 +38,7 @@ include "./cart/managecart.php";
                         <li><a href="#">About us</a></li>
                         <li><a href="#">Contact</a></li>
                         <li><a href="#menu-food-info-wrapper">View Menu</a></li>
-                        <li><a href="logout.php">Log out</a></li>
+                        <li><a href="login.php">Log In</a></li>
                         <li><a href="index.php"><button>Back</button></a></li>
 
 

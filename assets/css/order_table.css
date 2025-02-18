@@ -22,3 +22,16 @@ th {
     margin-left: 345px;
     margin-top: 97px;
 }
+.reg-wrapper.order.cart{
+      height: 475px !important;
+    width: 690px !important;
+    margin-left: 338px !important;
+    margin-top: 59px !important;
+}
+.order_title{
+    display: flex;
+    justify-content: space-between;
+}
+.order_count{
+    margin: 15px 100px 15px 0px;
+}
