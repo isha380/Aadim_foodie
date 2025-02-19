@@ -1,7 +1,8 @@
 <?php
-session_start();
-include "../database/connection.php";
+date_default_timezone_set('Asia/Kathmandu');
 
+include "../database/connection.php";
+session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -25,9 +26,8 @@ $student_id = $_SESSION['roll']; // Student ID from session
 $order_date = date("Y-m-d H:i:s"); // Current date and time
 
 // Prepare SQL statement
-$sql = "INSERT INTO order_food (Dish_name, Quantity, Price, Student_Id, Order_Date) VALUES (?, ?, ?, ?, ?)";
+$sql = "INSERT INTO order_food (Dish_name, Quantity, Price, Student_Id, Order_Date, Order_Time) VALUES (?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-
 if (!$stmt) {
     die("Error preparing statement: " . $conn->error);
 }
@@ -51,13 +51,9 @@ foreach ($cart_items as $item) {
     $quantity = isset($item['order_quantity']) ? intval($item['order_quantity']) : 0;
     $price = isset($item['order_price']) ? floatval($item['order_price']) : 0.0;
     
-//     // Skip inserting invalid items
-//     if ($dish_name === "Unknown" || $quantity <= 0 || $price <= 0) {
-//         continue;
-//     }
-
+    $order_time = date("H:i:s"); // Current time
     // Bind parameters and execute SQL query
-    $stmt->bind_param("sidss", $dish_name, $quantity, $price, $student_id, $order_date);
+    $stmt->bind_param("sidsss", $dish_name, $quantity, $price, $student_id, $order_date, $order_time);
 
     if (!$stmt->execute()) {
         echo "<p style='color:red;'>Error inserting $dish_name: " . $stmt->error . "</p><hr>";
