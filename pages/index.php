@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/component.css">
     <link rel="stylesheet" href="../assets/css/responsive.css">
-    
+
 </head>
 
 <body>
@@ -19,9 +19,9 @@
             </div>
             <div class="navBar-banner-headings">
                 <ul>
-                    <li><a  class="active"href="login.php">Home</a></li>
+                    <li><a class="active" href="login.php">Home</a></li>
                     <li><a class="active" href="#">About us</a></li>
-                    <li><a  class="active" href="#">Contact</a></li>
+                    <li><a class="active" href="#">Contact</a></li>
 
                     <li><a class="active" href="../pages/menu_view.php">view menu</a></li>
 
@@ -58,9 +58,9 @@
     <!-- --------------------------------------------------------------------------------------------------------------------------->
     <section id="dish-banner">
         <div class="dish-banner-title">
-            <marquee><span>Dish of the Day.......</span></marquee>
+            <marquee><span>Delight Your Taste Buds.......</span></marquee>
         </div>
-        <!-- <div class="dish-slide-container">
+        <div class="dish-slide-container">
             <div class="arrow slider-left-arrow-container">
                 <span class=" slider-left-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 1024 1024">
                         <path fill=" #543787" d="M685.248 104.704a64 64 0 0 1 0 90.496L368.448 512l316.8 316.8a64 64 0 0 1-90.496 90.496L232.704 557.248a64 64 0 0 1 0-90.496l362.048-362.048a64 64 0 0 1 90.496 0" />
@@ -144,89 +144,8 @@
                         <path fill="#543787" d="M338.752 104.704a64 64 0 0 0 0 90.496l316.8 316.8l-316.8 316.8a64 64 0 0 0 90.496 90.496l362.048-362.048a64 64 0 0 0 0-90.496L429.248 104.704a64 64 0 0 0-90.496 0" />
                     </svg></span>
             </div>
-        </div> -->
-        <div class="menu-container home">
-
-
-<button class=" arrow menu pre"><svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 1024 1024">
-        <path fill=" #543787" d="M685.248 104.704a64 64 0 0 1 0 90.496L368.448 512l316.8 316.8a64 64 0 0 1-90.496 90.496L232.704 557.248a64 64 0 0 1 0-90.496l362.048-362.048a64 64 0 0 1 90.496 0" />
-    </svg></button>
-
-
-<button class="arrow menu next"><svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 1024 1024">
-        <path fill="#543787" d="M338.752 104.704a64 64 0 0 0 0 90.496l316.8 316.8l-316.8 316.8a64 64 0 0 0 90.496 90.496l362.048-362.048a64 64 0 0 0 0-90.496L429.248 104.704a64 64 0 0 0-90.496 0" />
-    </svg></button>
-
-
-<div class="dish-slide-container menu">
-    <?php
-
-
-    $res = mysqli_query($conn, "SELECT * FROM menu_items");
-
-    // Loop through each item and display it
-    while ($row = mysqli_fetch_assoc($res)) {
-
-    ?>
-        <form method="POST" action="./cart/managecart.php">
-            <div class="dish-content-wrapper menu">
-                <div class="dish-image">
-                    <img src="../assets/image/menu/<?php echo htmlspecialchars($row['Image']); ?>" alt="Dish Image">
-                </div>
-                <div class="dish-info">
-                    <div class="dish-name">
-                        <button class="btn dish"><?php echo htmlspecialchars($row['Name']); ?></button>
-                    </div>
-                    <div class="dish-price">
-                        <span class="slider-dish-price">Per Plate:
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3m0 0c6.667 0 6.667-10 0-10" />
-                            </svg>
-                            <?php echo htmlspecialchars($row['Price']); ?>
-                        </span>
-                    </div>
-                    <div class="dish-status-wrapper">
-                        <span class="dish-status-text">Status:
-                            <button class="dish-status-label" id="dish-status" <?php if ($row['Status'] == '1') {
-                                                                                    echo 'style="background-color:  #6EC531; color:"  #FEB737" "';
-                                                                                } ?>>
-                                <?php
-
-                                echo ($row['Status'] == '1') ? 'Available' : 'Unavailable';
-
-                                ?>
-                            </button>
-                        </span>
-                    </div>
-
-                    <div class="add-to-cart-button">
-
-                        <?php
-                        if ($row['Status'] == '0') {
-                            echo  '<button class="btn cart-btn" onclick="alert(\'This dish is not available for now\')">
-                         <span class="cart-btn-text">Add to cart</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
-                        </svg></button>';
-                        } else {
-                            echo  '<button class="btn cart-btn" type="submit" name="add_to_cart">
-                         <span class="cart-btn-text">Add to cart</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path fill="#feb737" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" />
-                        </svg></button>';
-                        }
-
-                        ?>
-                        <input type="hidden" name="order_name" value="<?php $row['Name'] ?>">
-                        <input type="hidden" name="order_price" value="<?php $row['Price'] ?>">
-                        <input type="hidden" id="order-quantity-<?php echo $row['Id']; ?>" name="quantity" value="1">
-                    </div>
-        </form>
-</div>
-<?php
-                }
-    ?>
-</div>
+        </div>
+        
 
     </section>
     <!-- --------------------------------------------------------footer ------------------------------------------------------------------------ -->
@@ -299,7 +218,7 @@
 
             </div>
             <div class="section for-your-feedback">
-            <h2>For your feedback</h2>
+                <h2>For your feedback</h2>
                 <div class="feedback-wrapper">
                     <div class="feedback-img">
                         <span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">
@@ -321,7 +240,7 @@
             <p>Copyright@2024.All right reserved</p>
         </div>
 
-</div>
+    </div>
     <script src="slide.js"></script>
 </body>
 

@@ -364,6 +364,7 @@ $total = $data['total'];
     <script src="../js/dropdown-dash.js">
 
     </script>
+    <script src="../ajax/order_status.js"></script>
 
     <script src="../js/status_dropdown.js"></script>
     <script>

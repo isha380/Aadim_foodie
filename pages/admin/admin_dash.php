@@ -53,7 +53,7 @@ $adminName = $_SESSION['admin'];
                         <span class="dash dropdown" onclick="dropdown_show(this)">Orders</span>
                         <div class="dropdown-content" style="display: none;">
                             <a href="../admin/status_view.php">Status</a>
-                            <a href="#">Add User</a>
+                            <a href="../admin/pending.php">Dues</a>
                             </div>
                         </div>
                     </div>
