@@ -2,17 +2,37 @@
 session_start();
 include "../database/connection.php";
 
-//checking if user logged in
-
+// Checking if user logged in
 if (!isset($_SESSION['admin_id'])) {
     header('Location: admin_login.php'); // Redirect to login if not logged in
     exit();
 }
 
-//retrieve
+// Handle status update via regular form submission
+if (isset($_POST['update_status'])) {
+    $cartId = $_POST['cartId'];
+    $newStatus = $_POST['status'];
+    
+    // Update the status in the database
+    $updateQuery = "UPDATE order_food SET Order_Status = ? WHERE Cart_Id = ?";
+    $updateStmt = $conn->prepare($updateQuery);
+    $updateStmt->bind_param("ss", $newStatus, $cartId);
+    
+    if ($updateStmt->execute()) {
+        $_SESSION['message'] = "Order status updated successfully!";
+    } else {
+        $_SESSION['message'] = "Failed to update order status: " . $conn->error;
+    }
+    
+    // Redirect back to the same page to reflect changes
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Rest of your existing code for retrieving admin name and order information
 $adminName = $_SESSION['admin'];
 
-//fetching
+// Fetching orders for today
 $info = [];
 $query = "SELECT order_food.*, student_info.Name 
           FROM order_food 
@@ -63,18 +83,14 @@ if (isset($_POST['submit'])) {
     }
 }
 
-
-
+// Count total orders
 $stmt = mysqli_query($conn, "SELECT COUNT(*) AS total FROM order_food");
 $data = mysqli_fetch_assoc($stmt);
 $total = $data['total'];
-
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,7 +137,6 @@ $total = $data['total'];
             color: #333;
         }
     </style>
-
 </head>
 
 <body class="dashboard">
@@ -179,10 +194,8 @@ $total = $data['total'];
                             </div>
                         </div>
                     </div>
-
                     <button class="btn reg-btn dash"><a href="../admin/admin_dash.php" style="text-decoration: none;">Back</a>
                     </button>
-
                 </div>
             </div>
         </div>
@@ -194,7 +207,6 @@ $total = $data['total'];
             <button class="student-info-btn">TODAY'S ORDER DETAILS</button>
             <span class="current-date" style="color: purple; font-size:20px; font-weight:bold;">Date:<?php echo date("Y-m-d"); ?></span>
             <div class="search-total-wrapper">
-
                 <form method="POST" class="search-wrapper">
                     <div class="search-box">
                         <input type="text" placeholder="Search id/name/food" name="search_data">
@@ -214,23 +226,14 @@ $total = $data['total'];
                     <p><?php echo htmlspecialchars($searchMessage); ?></p>
                 </div>
             <?php endif; ?>
-            <?php
-            if (isset($_SESSION['message'])) {
-                echo "<p style='color: green; font-weight: bold;'>" . $_SESSION['message'] . "</p>";
-                unset($_SESSION['message']); // Clear message after displaying
-            } ?>
-            <script>
-                window.onload = function() {
-                    setTimeout(function() {
-                        var message = document.getElementById('message');
-                        if (message) {
-                            message.style.display = 'none';
-                        }
-                    }, 2000); // Wait 2 seconds before hiding //set timeout takes time in milliseconds
-                };
-            </script>
+            
+            <?php if (isset($_SESSION['message'])): ?>
+                <p id="message" style='color: green; font-weight: bold;'><?php echo $_SESSION['message']; ?></p>
+                <?php unset($_SESSION['message']); ?>
+            <?php endif; ?>
+            
+            <!-- Order table -->
             <div class="table student">
-
                 <table>
                     <thead>
                         <tr>
@@ -245,41 +248,25 @@ $total = $data['total'];
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($searchResults as $order):    ?>
+                        <?php foreach ($searchResults as $order): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($order['Student_Id']); ?> </td>
-                                <td><?php echo htmlspecialchars($order['Cart_Id']); ?> </td>
+                                <td><?php echo htmlspecialchars($order['Student_Id']); ?></td>
+                                <td class="cart-id"><?php echo htmlspecialchars($order['Cart_Id']); ?></td>
                                 <td><?php echo htmlspecialchars($order['Name']); ?></td>
                                 <td><?php echo htmlspecialchars($order['Dish_name']); ?></td>
                                 <td><?php echo htmlspecialchars($order['Quantity']); ?></td>
                                 <td><?php echo htmlspecialchars($order['Price']); ?></td>
                                 <td>
                                     <div class="order-status-dropdown">
-                                        <button class="edit-btn">
-                                            <span class="status-icon" id="status-icon">
-                                                <!-- Default icon (can be any placeholder) -->
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
-                                                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                                                        <path stroke-dasharray="56" stroke-dashoffset="56" d="M3 21l2 -6l11 -11c1 -1 3 -1 4 0c1 1 1 3 0 4l-11 11l-6 2">
-                                                            <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="56;0" />
-                                                        </path>
-                                                        <path stroke-dasharray="8" stroke-dashoffset="8" d="M15 5l4 4">
-                                                            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="8;0" />
-                                                        </path>
-                                                        <path stroke-dasharray="6" stroke-dashoffset="6" stroke-width="1" d="M6 15l3 3">
-                                                            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0" />
-                                                        </path>
-                                                    </g>
-                                                    <path fill="currentColor" fill-opacity="0" d="M17 4H20V7L9 18L6 15L17 4Z">
-                                                        <animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.15s" values="0;0.3" />
-                                                    </path>
-                                                </svg>
-                                            </span>
-                                        </button>
-
-                                        <div class="dropdown-menu">
-                                            <button class="dropdown-item" data-status="Pending">
-                                                <span class="icon-pending">
+                                        <button class="edit-btn status-btn" onclick="toggleDropdown(this)">
+                                            <span class="status-icon" id="status-icon-<?php echo $order['Cart_Id']; ?>">
+                                                <?php if ($order['Order_Status'] == 'Received'): ?>
+                                                    <!-- Received Icon -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24" title="Received">
+                                                        <path fill="#48cb0d" fill-rule="evenodd" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m-.232-5.36l5-6l-1.536-1.28l-4.3 5.159l-2.225-2.226l-1.414 1.414l3 3l.774.774z" clip-rule="evenodd" />
+                                                    </svg>
+                                                <?php else: ?>
+                                                    <!-- Pending Icon -->
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
                                                         <g>
                                                             <path fill="currentColor" d="M7 3H17V7.2L12 12L7 7.2V3Z">
@@ -292,28 +279,53 @@ $total = $data['total'];
                                                             <animateTransform id="eosIconsHourglass1" attributeName="transform" attributeType="XML" begin="eosIconsHourglass0.end" dur="0.5s" from="0 12 12" to="180 12 12" type="rotate" />
                                                         </g>
                                                     </svg>
-                                                </span>
-                                                Pending..
-                                            </button>
-                                            <button class="dropdown-item" data-status="Received">
-                                                <span class="icon-received">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
-                                                        <path fill="#48cb0d" fill-rule="evenodd" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m-.232-5.36l5-6l-1.536-1.28l-4.3 5.159l-2.225-2.226l-1.414 1.414l3 3l.774.774z" clip-rule="evenodd" />
-                                                    </svg>
-                                                </span>
-                                                Received
-                                            </button>
+                                                <?php endif; ?>
+                                            </span>
+                                        </button>
+
+                                        <div class="dropdown-menu">
+                                            <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                                                <input type="hidden" name="cartId" value="<?php echo $order['Cart_Id']; ?>">
+                                                <input type="hidden" name="status" value="Pending">
+                                                <button type="submit" name="update_status" class="dropdown-item" data-status="Pending">
+                                                    <span class="icon-pending">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+                                                            <g>
+                                                                <path fill="currentColor" d="M7 3H17V7.2L12 12L7 7.2V3Z">
+                                                                    <animate id="eosIconsHourglass0" fill="freeze" attributeName="opacity" begin="0;eosIconsHourglass1.end" dur="2s" from="1" to="0" />
+                                                                </path>
+                                                                <path fill="currentColor" d="M17 21H7V16.8L12 12L17 16.8V21Z">
+                                                                    <animate fill="freeze" attributeName="opacity" begin="0;eosIconsHourglass1.end" dur="2s" from="0" to="1" />
+                                                                </path>
+                                                                <path fill="currentColor" d="M6 2V8H6.01L6 8.01L10 12L6 16L6.01 16.01H6V22H18V16.01H17.99L18 16L14 12L18 8.01L17.99 8H18V2H6ZM16 16.5V20H8V16.5L12 12.5L16 16.5ZM12 11.5L8 7.5V4H16V7.5L12 11.5Z" />
+                                                                <animateTransform id="eosIconsHourglass1" attributeName="transform" attributeType="XML" begin="eosIconsHourglass0.end" dur="0.5s" from="0 12 12" to="180 12 12" type="rotate" />
+                                                            </g>
+                                                        </svg>
+                                                    </span>
+                                                    Pending..
+                                                </button>
+                                            </form>
+                                            
+                                            <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                                                <input type="hidden" name="cartId" value="<?php echo $order['Cart_Id']; ?>">
+                                                <input type="hidden" name="status" value="Received">
+                                                <button type="submit" name="update_status" class="dropdown-item" data-status="Received">
+                                                    <span class="icon-received">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+                                                            <path fill="#48cb0d" fill-rule="evenodd" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m-.232-5.36l5-6l-1.536-1.28l-4.3 5.159l-2.225-2.226l-1.414 1.414l3 3l.774.774z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </span>
+                                                    Received
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
-
-
-
                                 </td>
                                 <td>
                                     <div class="action button">
                                         <!-- Paid Button -->
                                         <div class="update button">
-                                            <a href="../order/paid.php?id=<?php echo $order['Cart_Id']; ?>" onclick="return confirm('Did customer pay?')">
+                                            <a href="../order/paid.php?id=<?php echo $order['Cart_Id']; ?>" onclick="return confirm('Did customer pay?')" <?php if($order['Order_Status'] == 'Pending') echo 'style="pointer-events: none; opacity: 0.5;"'; ?>>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
                                                     <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" color="currentColor">
                                                         <path d="M19.745 13a7 7 0 1 0-12.072-1" />
@@ -325,7 +337,7 @@ $total = $data['total'];
 
                                         <!-- Not Paid Button -->
                                         <div class="update button">
-                                            <a href="../order/notpaid.php?id=<?php echo $order['Cart_Id']; ?>" onclick="return confirm('Did customer not pay?')">
+                                            <a href="../order/notpaid.php?id=<?php echo $order['Cart_Id']; ?>" onclick="return confirm('Did customer not pay?')" <?php if($order['Order_Status'] == 'Pending') echo 'style="pointer-events: none; opacity: 0.5;"'; ?>>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 20 20">
                                                     <g fill="currentColor">
                                                         <path fill-rule="evenodd" d="M7.897 5.7c-.551.413-.8.908-.8 1.37s.249.958.8 1.372c.552.414 1.36.7 2.295.7a1 1 0 1 1 0 2c-1.326 0-2.565-.402-3.495-1.1s-1.6-1.738-1.6-2.971s.67-2.274 1.6-2.972C7.627 3.402 8.867 3 10.192 3c2.053 0 3.994.983 4.766 2.62a1 1 0 0 1-1.81.853C12.798 5.726 11.706 5 10.193 5c-.935 0-1.743.286-2.295.7" clip-rule="evenodd" />
@@ -337,10 +349,9 @@ $total = $data['total'];
                                             </a>
                                         </div>
 
-
                                         <!-- Delete Button -->
                                         <div class="delete button">
-                                            <a href="../order/cancel_order.php?id=<?php echo $order['Cart_Id']; ?>" onclick="return confirm('<?php echo 'Are you sure you want to cancel order?'; ?>')">
+                                            <a href="../order/cancel_order.php?id=<?php echo $order['Cart_Id']; ?>" onclick="return confirm('Are you sure you want to cancel order?')">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
                                                     <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z" />
                                                 </svg>
@@ -348,61 +359,53 @@ $total = $data['total'];
                                         </div>
                                     </div>
                                 </td>
-
-
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-
-
         </div>
-
     </div>
 
-    <script src="../js/dropdown-dash.js">
-
-    </script>
-    <script src="../ajax/order_status.js"></script>
-
-    <script src="../js/status_dropdown.js"></script>
+    <!-- JavaScript for dropdowns -->
+    <script src="../js/dropdown-dash.js"></script>
+    
     <script>
-        document.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const newStatus = this.getAttribute('data-status');
-                const cartId = this.closest('tr').querySelector('.cart-id').textContent; // Assuming Cart_Id is present in the table
-
-                // Update status icon based on the selected status
-                const statusIcon = this.closest('tr').querySelector('.status-icon');
-                if (newStatus === 'Received') {
-                    statusIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="#48cb0d" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m-.232-5.36l5-6l-1.536-1.28l-4.3 5.159l-2.225-2.226l-1.414 1.414l3 3l.774.774z" /></svg>`;
-                } else {
-                    statusIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 3H17V7.2L12 12L7 7.2V3Z" /></svg>`;
+        // Function to handle dropdown toggle
+        function toggleDropdown(button) {
+            const dropdown = button.nextElementSibling;
+            const allDropdowns = document.querySelectorAll('.dropdown-menu');
+            
+            // Close all other dropdowns
+            allDropdowns.forEach(menu => {
+                if (menu !== dropdown) {
+                    menu.classList.remove('show');
                 }
-
-                // Make an AJAX call to update the order status in the database
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', 'update_status.php', true);
-                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        console.log('Status updated successfully');
-                    } else {
-                        console.error('Error updating status');
-                    }
-                };
-                xhr.send('cartId=' + cartId + '&status=' + newStatus);
             });
+            
+            // Toggle current dropdown
+            dropdown.classList.toggle('show');
+        }
+        
+        // Close dropdowns when clicking elsewhere on the page
+        document.addEventListener('click', function(event) {
+            if (!event.target.matches('.status-btn') && !event.target.closest('.status-btn')) {
+                const dropdowns = document.querySelectorAll('.dropdown-menu');
+                dropdowns.forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
         });
+        
+        // Auto-hide messages after 2 seconds
+        window.onload = function() {
+            setTimeout(function() {
+                var message = document.getElementById('message');
+                if (message) {
+                    message.style.display = 'none';
+                }
+            }, 2000);
+        };
     </script>
-
-
-
-
-
-
-
 </body>
-
 </html>
