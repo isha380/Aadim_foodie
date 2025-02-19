@@ -254,7 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['order_id'])) {
                         <li><a href="../pages/index.php">Home</a></li>
                         <li><a href="#">About us</a></li>
                         <li><a href="#">Contact</a></li>
-                        <li><a href="#menu-food-info-wrapper">View Menu</a></li>
+                        <li><a href="./menu_page.php#menu-food-info-wrapper">View Menu</a></li>
                         <li><a href="logout.php">Log out</a></li>
                         <li><a href="../menu_page.php"><button>Back</button></a></li>
                     </ul>
