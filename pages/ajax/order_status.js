@@ -1,4 +1,4 @@
-<script>
+{/* <script> */}
     document.addEventListener('DOMContentLoaded', function() {
         const statusButtons = document.querySelectorAll('.dropdown-item[data-status="Received"]');
 
@@ -31,4 +31,4 @@
             });
         });
     });
-</script>
+// </script>
