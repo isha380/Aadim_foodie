@@ -2,6 +2,10 @@
 session_start();
 include "../pages/database/connection.php";
 
+if(isset($_SESSION['roll'])){
+    header("Location: menu_page.php");
+}
+
 $error = ""; // Initialize an error variable to display messages in HTML
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login-id-value'], $_POST['login-id-pw'])) {
