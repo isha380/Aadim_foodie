@@ -226,7 +226,7 @@ $total = $data['total'];
                         if (message) {
                             message.style.display = 'none';
                         }
-                    }, 2000); // Wait 4 seconds before hiding
+                    }, 2000); // Wait 2 seconds before hiding //set timeout takes time in milliseconds
                 };
             </script>
             <div class="table student">
